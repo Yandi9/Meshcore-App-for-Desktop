@@ -1,0 +1,6 @@
+Microsoft.Windows.SDK.BuildTools 10.0.26100.4654
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (url): https://aka.ms/WinSDKLicenseURL
+Project: https://aka.ms/WinSDKProjectURL
+Package: https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/10.0.26100.4654

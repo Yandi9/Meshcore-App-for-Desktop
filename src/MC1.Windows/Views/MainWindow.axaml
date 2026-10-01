@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MC1.Windows.ViewModels"
+        xmlns:views="using:MC1.Windows.Views"
+        x:Class="MC1.Windows.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="MeshCore"
+        Icon="/Assets/AppIcon.ico"
+        Width="1280" Height="820" MinWidth="720" MinHeight="540"
+        WindowStartupLocation="CenterScreen">
+  <!-- The shell (rebuilt when the language changes); overlays and the start-up animation are added on top. -->
+  <Grid x:Name="Root">
+    <views:ShellView />
+  </Grid>
+</Window>

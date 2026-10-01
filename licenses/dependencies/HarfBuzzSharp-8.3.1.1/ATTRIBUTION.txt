@@ -1,0 +1,6 @@
+HarfBuzzSharp 8.3.1.1
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (expression): MIT
+Project: https://go.microsoft.com/fwlink/?linkid=868515
+Package: https://www.nuget.org/packages/HarfBuzzSharp/8.3.1.1

@@ -1,0 +1,6 @@
+Dapper 2.1.89
+Authors: Sam Saffron,Marc Gravell,Nick Craver
+Copyright: 2019 Stack Exchange, Inc.
+License (expression): Apache-2.0
+Project: https://dapperlib.dev/
+Package: https://www.nuget.org/packages/Dapper/2.1.89

@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             x:Class="MC1.Windows.Views.ShareContactView"
+             x:DataType="vm:ShareContactViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="20,16" Spacing="8">
+      <TextBlock Text="{Binding Name}" Classes="h2" HorizontalAlignment="Center" />
+      <Border Background="White" CornerRadius="10" Padding="4" HorizontalAlignment="Center">
+        <Path Data="{Binding Qr}" Width="230" Height="230" Stretch="Uniform" Fill="Black" />
+      </Border>
+      <TextBlock Classes="hint" TextAlignment="Center" Text="{l:T 'Scan this code with a MeshCore app to add the contact.'}" />
+      <TextBox Text="{Binding Uri, Mode=OneWay}" IsReadOnly="True" Classes="mono" FontSize="11" TextWrapping="Wrap" />
+      <WrapPanel HorizontalAlignment="Center">
+        <Button Content="{l:T 'Copy link'}" Command="{Binding CopyLinkCommand}" Margin="4" />
+        <Button Content="{l:T 'Copy chat token'}" Command="{Binding CopyTokenCommand}" Margin="4" ToolTip.Tip="{l:T 'A short token you can paste into a chat message'}" />
+        <Button Content="{l:T 'Copy public key'}" Command="{Binding CopyKeyCommand}" Margin="4" />
+        <Button Content="{l:T 'Save QR…'}" Command="{Binding SaveQrCommand}" Margin="4" />
+        <Button Content="{l:T 'Copy signed advert card'}" Command="{Binding ExportCardCommand}" Margin="4" />
+      </WrapPanel>
+      <TextBlock Text="{Binding Message}" Classes="secondary" HorizontalAlignment="Center" IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

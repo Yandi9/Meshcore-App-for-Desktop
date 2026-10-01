@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             x:Class="MC1.Windows.Views.MessageDetailsView"
+             x:DataType="vm:MessageDetailsViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="20,16" Spacing="6">
+      <Border Classes="card" Padding="12,10">
+        <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" />
+      </Border>
+      <TextBlock Classes="section" Text="{l:T 'MESSAGE'}" />
+      <Border Classes="group">
+        <ItemsControl ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:DetailRow">
+              <Grid ColumnDefinitions="150,*" MinHeight="30">
+                <TextBlock Text="{Binding Label}" Classes="secondary" VerticalAlignment="Center" />
+                <SelectableTextBlock Grid.Column="1" Text="{Binding Value}" VerticalAlignment="Center" TextWrapping="Wrap" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+      <StackPanel IsVisible="{Binding HasHops}">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Classes="section" Text="{l:T 'PATH'}" />
+          <Button Grid.Column="1" Classes="link" Content="{l:T 'Show on map'}" Command="{Binding ShowPathOnMapCommand}" IsVisible="{Binding CanShowPathOnMap}" VerticalAlignment="Bottom" Margin="0,0,0,6" />
+        </Grid>
+        <Border Classes="group">
+          <ItemsControl ItemsSource="{Binding Hops}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:PathHopRow">
+                <Grid ColumnDefinitions="Auto,*" MinHeight="34">
+                  <Border Classes="chip" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <TextBlock Text="{Binding Hash}" Classes="mono" FontSize="12" />
+                  </Border>
+                  <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding Detail}" Classes="caption" IsVisible="{Binding Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                  </StackPanel>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+      </StackPanel>
+      <StackPanel IsVisible="{Binding HasRepeats}">
+        <TextBlock Classes="section" Text="{l:T 'HEARD REPEATS'}" />
+        <Border Classes="group">
+          <ItemsControl ItemsSource="{Binding Repeats}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:DetailRow">
+                <Grid ColumnDefinitions="*,Auto" MinHeight="30">
+                  <TextBlock Text="{Binding Label}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="1" Text="{Binding Value}" Classes="secondary" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+      </StackPanel>
+      <StackPanel IsVisible="{Binding HasReactions}">
+        <TextBlock Classes="section" Text="{l:T 'REACTIONS'}" />
+        <Border Classes="group">
+          <ItemsControl ItemsSource="{Binding Reactions}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:DetailRow">
+                <Grid ColumnDefinitions="40,*" MinHeight="30">
+                  <TextBlock Text="{Binding Label}" FontSize="18" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Text="{Binding Value}" VerticalAlignment="Center" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

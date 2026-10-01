@@ -1,0 +1,6 @@
+Avalonia 11.3.22
+Authors: Avalonia Team
+Copyright: Copyright 2013-2026 © The AvaloniaUI Project
+License (expression): MIT
+Project: https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
+Package: https://www.nuget.org/packages/Avalonia/11.3.22

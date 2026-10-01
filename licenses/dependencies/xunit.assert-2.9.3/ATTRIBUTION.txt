@@ -1,0 +1,6 @@
+xunit.assert 2.9.3
+Authors: jnewkirk,bradwilson
+Copyright: Copyright (C) .NET Foundation
+License (expression): Apache-2.0
+Project: 
+Package: https://www.nuget.org/packages/xunit.assert/2.9.3

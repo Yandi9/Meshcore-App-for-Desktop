@@ -1,0 +1,6 @@
+Avalonia.BuildServices 11.3.2
+Authors: Avalonia Team
+Copyright: Copyright 2023-2025 © The AvaloniaUI Project
+License (expression): MIT
+Project: https://avaloniaui.net/
+Package: https://www.nuget.org/packages/Avalonia.BuildServices/11.3.2

@@ -1,0 +1,103 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             xmlns:l="using:MC1.Windows.Localization"
+             x:Class="MC1.Windows.Views.WelcomeGuideView"
+             x:DataType="vm:WelcomeGuideViewModel">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="28,20,28,22" MinHeight="400">
+    <!-- Skip -->
+    <Button Grid.Row="0" Classes="link" Content="{l:T 'Skip'}" HorizontalAlignment="Right" Command="{Binding SkipCommand}" IsVisible="{Binding ShowSkip}" />
+
+    <!-- The page -->
+    <StackPanel Grid.Row="1" Spacing="14" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="460" Margin="0,4,0,8">
+      <Panel Width="96" Height="96" HorizontalAlignment="Center" Margin="0,0,0,6">
+        <Image Source="/Assets/AppIcon256.png" Width="96" Height="96" IsVisible="{Binding Step.IsLogo}" />
+        <Border Width="96" Height="96" CornerRadius="48" Background="{DynamicResource App.Accent}" IsVisible="{Binding !Step.IsLogo}">
+          <PathIcon Width="44" Height="44" Foreground="White"
+                    Data="{Binding Step.IconKey, Converter={x:Static conv:IconConverter.Instance}}" />
+        </Border>
+      </Panel>
+      <TextBlock Text="{Binding Step.Title}" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center" />
+      <TextBlock Text="{Binding Step.Body}" TextWrapping="Wrap" TextAlignment="Center" Classes="secondary" FontSize="14" LineHeight="21" />
+
+      <!-- Language page: every language, in its own name; picking one switches the app (and this guide) right away -->
+      <StackPanel Spacing="8" IsVisible="{Binding Step.IsLanguage}">
+        <ListBox Classes="langgrid" ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}">
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate><UniformGrid Columns="3" /></ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:LanguageOption">
+              <StackPanel Spacing="1">
+                <TextBlock Text="{Binding Label}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding Caption}" Classes="caption" IsVisible="{Binding HasCaption}" TextTrimming="CharacterEllipsis" />
+              </StackPanel>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center">
+          <PathIcon Classes="small" Data="{StaticResource Icon.CogOutline}" Foreground="{DynamicResource App.TextSecondary}" VerticalAlignment="Top" Margin="0,1,6,0" />
+          <TextBlock Grid.Column="1" Classes="caption" Text="{l:T 'You can change it later in Settings → General → Language.'}" TextWrapping="Wrap" />
+        </Grid>
+      </StackPanel>
+
+      <!-- Quick choices on the "Always within reach" page -->
+      <Border Classes="group" IsVisible="{Binding Step.HasToggles}" Margin="0,6,0,0">
+        <StackPanel>
+          <Grid ColumnDefinitions="*,Auto" Margin="14,10" IsVisible="{Binding CanAutoStart}">
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="{l:T 'Start MeshCore when Windows starts'}" />
+              <TextBlock Text="{l:T 'It waits in the notification area'}" Classes="caption" />
+            </StackPanel>
+            <ToggleSwitch Grid.Column="1" IsChecked="{Binding StartWithWindows}" OnContent="" OffContent="" />
+          </Grid>
+          <Grid ColumnDefinitions="*,Auto" Margin="14,10">
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="{l:T 'Windows notifications'}" />
+              <TextBlock Text="{l:T 'For new messages, with quick reply'}" Classes="caption" />
+            </StackPanel>
+            <ToggleSwitch Grid.Column="1" IsChecked="{Binding Notifications}" OnContent="" OffContent="" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Connect page: the three ways in -->
+      <StackPanel Orientation="Horizontal" Spacing="22" HorizontalAlignment="Center" IsVisible="{Binding Step.IsConnect}" Margin="0,4,0,0">
+        <StackPanel Spacing="4">
+          <PathIcon Data="{StaticResource Icon.Bluetooth}" Foreground="{DynamicResource App.Accent}" HorizontalAlignment="Center" />
+          <TextBlock Text="Bluetooth" Classes="caption" HorizontalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Spacing="4">
+          <PathIcon Data="{StaticResource Icon.Usb}" Foreground="{DynamicResource App.Accent}" HorizontalAlignment="Center" />
+          <TextBlock Text="{l:T 'USB cable'}" Classes="caption" HorizontalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Spacing="4">
+          <PathIcon Data="{StaticResource Icon.Wifi}" Foreground="{DynamicResource App.Accent}" HorizontalAlignment="Center" />
+          <TextBlock Text="WiFi" Classes="caption" HorizontalAlignment="Center" />
+        </StackPanel>
+      </StackPanel>
+    </StackPanel>
+
+    <!-- Dots and buttons -->
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,*">
+      <Button Classes="link" Content="{l:T 'Back'}" Command="{Binding BackCommand}" IsVisible="{Binding HasBack}" HorizontalAlignment="Left" />
+      <ItemsControl Grid.Column="1" ItemsSource="{Binding Dots}" IsVisible="{Binding ShowDots}" VerticalAlignment="Center">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="6" /></ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:GuideDot">
+            <Border Height="8" CornerRadius="4" Classes="guidedot" Classes.current="{Binding IsCurrent}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+        <Button Content="{l:T 'Not now'}" Command="{Binding LaterCommand}" IsVisible="{Binding ShowConnect}" />
+        <Button Classes="accent" Content="{l:T 'Connect a radio'}" Command="{Binding ConnectCommand}" IsVisible="{Binding ShowConnect}" />
+        <Button Classes="accent" Content="{l:T 'Next'}" Command="{Binding NextCommand}" IsVisible="{Binding ShowNext}" MinWidth="96" HorizontalContentAlignment="Center" />
+        <Button Classes="accent" Content="{l:T 'Get started'}" Command="{Binding DoneCommand}" IsVisible="{Binding ShowFinish}" />
+      </StackPanel>
+    </Grid>
+  </Grid>
+</UserControl>

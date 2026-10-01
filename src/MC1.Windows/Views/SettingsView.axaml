@@ -1,0 +1,396 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:svc="using:MC1.Windows.Services"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+  <UserControl.Resources>
+    <!-- Small chat preview used in the chat-looks list -->
+    <DataTemplate x:Key="ThemeSwatch" x:DataType="svc:ChatAppearance">
+      <Border Width="56" Height="38" CornerRadius="8" ClipToBounds="True" BorderBrush="{DynamicResource App.Border}" BorderThickness="1"
+              Background="{DynamicResource App.Background}">
+        <Panel>
+          <Border Background="{Binding Background}" />
+          <Image Source="{Binding Image}" Stretch="UniformToFill" />
+          <StackPanel Margin="5" Spacing="3">
+            <Border Background="{Binding PreviewIncomingBubble}" CornerRadius="4" Width="26" Height="9" HorizontalAlignment="Left" />
+            <Border Background="{Binding PreviewOutgoingBubble}" CornerRadius="4" Width="26" Height="9" HorizontalAlignment="Right" />
+          </StackPanel>
+        </Panel>
+      </Border>
+    </DataTemplate>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="ToggleSwitch">
+      <Setter Property="OnContent" Value="" />
+      <Setter Property="OffContent" Value="" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="Margin" Value="0,0,-12,0" />
+    </Style>
+    <Style Selector="StackPanel.page">
+      <Setter Property="Spacing" Value="6" />
+    </Style>
+    <Style Selector="TextBlock.pagehint">
+      <Setter Property="Foreground" Value="{DynamicResource App.TextSecondary}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+    <Style Selector="TextBlock.groupname">
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource App.TextSecondary}" />
+      <Setter Property="Margin" Value="4,14,0,2" />
+    </Style>
+    <!-- Category list: a column on the left, or a wrapping strip of chips on top when narrow -->
+    <Style Selector="ListBox.catnav">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="ListBox.catnav ListBoxItem">
+      <Setter Property="Padding" Value="10,8" />
+      <Setter Property="Margin" Value="0,1" />
+      <Setter Property="CornerRadius" Value="8" />
+    </Style>
+    <Style Selector="ListBox.catnav ListBoxItem:selected /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource App.Selection}" />
+    </Style>
+    <Style Selector="ListBox.catnav.strip">
+      <Setter Property="ItemsPanel">
+        <ItemsPanelTemplate>
+          <WrapPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="ListBox.catnav.strip ListBoxItem">
+      <Setter Property="Padding" Value="10,5" />
+      <Setter Property="Margin" Value="0,0,6,6" />
+      <Setter Property="CornerRadius" Value="16" />
+      <Setter Property="Background" Value="{DynamicResource App.Chip}" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid x:Name="Root" ColumnDefinitions="Auto,*" RowDefinitions="Auto,*">
+    <!-- Categories -->
+    <Border x:Name="NavHost" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Width="230" Padding="14,20,10,12"
+            BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,1,0" Background="{DynamicResource App.Surface}">
+      <DockPanel>
+        <TextBlock x:Name="NavTitle" DockPanel.Dock="Top" Classes="pagetitle" Text="{l:T 'Settings'}" Margin="10,0,0,14" />
+        <ListBox x:Name="CategoryList" Classes="catnav" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:SettingsCategory">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <PathIcon Classes="small" Data="{Binding IconKey, Converter={x:Static conv:IconConverter.Instance}}" />
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+              </StackPanel>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Border>
+
+    <!-- Pages -->
+    <ScrollViewer x:Name="PageScroller" Grid.Column="1" Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+      <StackPanel x:Name="PageHost" Margin="28,22,28,28" MaxWidth="760" HorizontalAlignment="Left">
+        <Border Classes="banner" Margin="0,0,0,12" IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+          <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+        </Border>
+
+        <!-- General -->
+        <StackPanel Classes="page" IsVisible="{Binding IsGeneral}">
+          <TextBlock Classes="h2" Text="{l:T 'General'}" />
+          <!-- The radio, as it's set up right now (read from the radio) -->
+          <Border Classes="group" Margin="0,0,0,12" IsVisible="{Binding HasRadioSummary}">
+            <ctl:SettingRow Title="{Binding RadioSummaryTitle}" Hint="{Binding RadioSummary}" WrapWidth="560">
+              <Button Content="{l:T 'Radio settings'}" Command="{Binding OpenRadioPageCommand}" />
+            </ctl:SettingRow>
+          </Border>
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Language'}" Hint="{l:T 'Menus, buttons and messages'}">
+                <ComboBox ItemsSource="{Binding LanguageOptions}" SelectedItem="{Binding SelectedLanguage}" MinWidth="200">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:LanguageOption">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding Label}" />
+                        <TextBlock Text="{Binding Caption}" Classes="secondary" IsVisible="{Binding HasCaption}" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Theme'}">
+                <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}" MinWidth="140" />
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T '24-hour clock'}"><ToggleSwitch IsChecked="{Binding UseTwentyFourHourTime}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Metric units'}" Hint="{l:T 'Kilometres and metres'}"><ToggleSwitch IsChecked="{Binding UseMetricUnits}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Slim sidebar'}" Hint="{l:T 'Icons only (Ctrl+B)'}"><ToggleSwitch IsChecked="{Binding CompactSidebar}" /></ctl:SettingRow>
+            </StackPanel>
+          </Border>
+          <TextBlock Classes="groupname" Text="{l:T 'Startup'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Start MeshCore when Windows starts'}" Hint="{l:T 'When you sign in to Windows'}" IsEnabled="{Binding CanAutoStart}">
+                <ToggleSwitch IsChecked="{Binding StartWithWindows}" />
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Start in the notification area'}" Hint="{l:T 'Stays out of the way; messages still arrive'}" IsEnabled="{Binding StartWithWindows}">
+                <ToggleSwitch IsChecked="{Binding StartMinimized}" />
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Connect to the last radio on start'}"><ToggleSwitch IsChecked="{Binding ConnectOnLaunch}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Start-up animation'}" Hint="{l:T 'Plays when MeshCore starts, not when you reopen it from the tray'}">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                  <Button Content="{l:T 'Play'}" Command="{Binding PlayStartupAnimationCommand}" />
+                  <ToggleSwitch IsChecked="{Binding StartupAnimation}" />
+                </StackPanel>
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Start-up sound'}" Hint="{l:T 'Sound effects with the start-up animation'}" IsEnabled="{Binding StartupAnimation}">
+                <ToggleSwitch IsChecked="{Binding StartupSound}" />
+              </ctl:SettingRow>
+            </StackPanel>
+          </Border>
+          <TextBlock Classes="groupname" Text="{l:T 'Connection'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Reconnect automatically'}" Hint="{l:T 'If the link drops'}"><ToggleSwitch IsChecked="{Binding AutoReconnect}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Keep running in the tray when closed'}" Hint="{l:T 'Messages keep arriving'}"><ToggleSwitch IsChecked="{Binding MinimizeToTray}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Bluetooth PIN'}" Hint="{l:T 'Default 123456, or the PIN on the radio\'s screen'}">
+                <TextBox Text="{Binding BluetoothPin}" MaxLength="6" Width="120" />
+              </ctl:SettingRow>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Chats -->
+        <StackPanel Classes="page" IsVisible="{Binding IsChats}">
+          <TextBlock Classes="h2" Text="{l:T 'Chats'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Enter sends'}" Hint="{l:T 'Off: Ctrl+Enter sends'}"><ToggleSwitch IsChecked="{Binding SendOnEnter}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Link previews'}"><ToggleSwitch IsChecked="{Binding ShowLinkPreviews}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Pictures in chats'}" Hint="{l:T 'Show linked images'}"><ToggleSwitch IsChecked="{Binding ShowInlineImages}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Map previews'}" Hint="{l:T 'For shared coordinates'}"><ToggleSwitch IsChecked="{Binding ShowMapPreviews}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Heard repeats'}" Hint="{l:T 'On your channel messages'}"><ToggleSwitch IsChecked="{Binding ShowHeardRepeats}" /></ctl:SettingRow>
+            </StackPanel>
+          </Border>
+          <Expander Header="{l:T 'Delivery (advanced)'}" Margin="0,10,0,0" HorizontalAlignment="Stretch">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Direct message attempts'}">
+                <ComboBox ItemsSource="{Binding AttemptOptions}" SelectedItem="{Binding DmMaxAttempts}" MinWidth="90" />
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Flood from attempt'}" Hint="{l:T 'When the stored path fails'}">
+                <ComboBox ItemsSource="{Binding AttemptOptions}" SelectedItem="{Binding DmFloodAfter}" MinWidth="90" />
+              </ctl:SettingRow>
+            </StackPanel>
+          </Expander>
+        </StackPanel>
+
+        <!-- Chat looks -->
+        <StackPanel Classes="page" IsVisible="{Binding IsLooks}">
+          <TextBlock Classes="h2" Text="{l:T 'Chat looks'}" />
+          <TextBlock Classes="pagehint" Text="{l:T 'Backgrounds and colours for your chats. Tip: the palette button in a chat\'s header changes just that chat.'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Use custom looks'}" Hint="{l:T 'Off shows every chat in the app theme'}"><ToggleSwitch IsChecked="{Binding ChatThemesEnabled}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Default look'}" Hint="{l:T 'For chats without their own'}" IsEnabled="{Binding ChatThemesEnabled}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Panel VerticalAlignment="Center">
+                    <ContentControl Content="{Binding DefaultAppearance}" ContentTemplate="{StaticResource ThemeSwatch}" IsVisible="{Binding HasDefaultAppearance}" />
+                    <Border Width="56" Height="38" CornerRadius="8" BorderBrush="{DynamicResource App.Border}" BorderThickness="1" Background="{DynamicResource App.Background}"
+                            IsVisible="{Binding !HasDefaultAppearance}">
+                      <TextBlock Text="{l:T 'Theme'}" FontSize="11" Classes="secondary" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                  </Panel>
+                  <Button Content="{l:T 'Edit'}" Command="{Binding EditDefaultAppearanceCommand}" VerticalAlignment="Center" />
+                  <Button Content="{l:T 'Reset'}" Command="{Binding ResetDefaultAppearanceCommand}" IsVisible="{Binding HasDefaultAppearance}" VerticalAlignment="Center" />
+                </StackPanel>
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Customise a chat'}" IsEnabled="{Binding ChatThemesEnabled}" WrapWidth="560">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <ComboBox ItemsSource="{Binding AllChats}" SelectedItem="{Binding ChatToCustomize}" PlaceholderText="{l:T 'Choose a chat…'}" Width="210" />
+                  <Button Content="{l:T 'Customise'}" Command="{Binding CustomizeSelectedChatCommand}" />
+                </StackPanel>
+              </ctl:SettingRow>
+            </StackPanel>
+          </Border>
+          <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0" IsEnabled="{Binding ChatThemesEnabled}">
+            <TextBlock Classes="groupname" Text="{l:T 'Chats with their own look'}" />
+            <TextBlock Grid.Column="1" Classes="caption" Text="{Binding CustomizedSummary}" VerticalAlignment="Bottom" Margin="0,0,4,2" />
+          </Grid>
+          <Border Classes="group" IsEnabled="{Binding ChatThemesEnabled}">
+            <StackPanel>
+              <ItemsControl ItemsSource="{Binding CustomizedChats}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:ChatThemeRow">
+                    <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,6">
+                      <ContentControl Content="{Binding Appearance}" ContentTemplate="{StaticResource ThemeSwatch}" Margin="0,0,12,0" />
+                      <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Summary}" Classes="hint" TextTrimming="CharacterEllipsis" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                        <Button Classes="icon" ToolTip.Tip="{l:T 'Edit'}" Command="{Binding $parent[UserControl].((vm:SettingsViewModel)DataContext).EditChatAppearanceCommand}" CommandParameter="{Binding}">
+                          <PathIcon Classes="small" Data="{StaticResource Icon.Pencil}" />
+                        </Button>
+                        <Button Classes="icon" ToolTip.Tip="{l:T 'Back to the default look'}" Command="{Binding $parent[UserControl].((vm:SettingsViewModel)DataContext).ResetChatAppearanceCommand}" CommandParameter="{Binding}">
+                          <PathIcon Classes="small" Data="{StaticResource Icon.Restart}" />
+                        </Button>
+                      </StackPanel>
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Classes="hint" Text="{l:T 'None yet.'}" Margin="0,12" IsVisible="{Binding NoCustomizedChats}" />
+            </StackPanel>
+          </Border>
+          <Button Classes="danger" Content="{l:T 'Reset all chat looks…'}" Command="{Binding ResetAllChatAppearancesCommand}" Margin="0,8,0,0" />
+        </StackPanel>
+
+        <!-- Notifications -->
+        <StackPanel Classes="page" IsVisible="{Binding IsNotifications}">
+          <TextBlock Classes="h2" Text="{l:T 'Notifications'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Windows notifications'}" Hint="{l:T 'With quick reply'}"><ToggleSwitch IsChecked="{Binding NotificationsEnabled}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Unread badge'}" Hint="{l:T 'On the taskbar and tray icons'}"><ToggleSwitch IsChecked="{Binding ShowUnreadOnTaskbar}" /></ctl:SettingRow>
+            </StackPanel>
+          </Border>
+          <TextBlock Classes="groupname" Text="{l:T 'Notify me about'}" />
+          <Border Classes="group" IsEnabled="{Binding NotificationsEnabled}">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Direct messages'}"><ToggleSwitch IsChecked="{Binding NotifyDirectMessages}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Channel messages'}" Hint="{l:T 'Each channel\'s own level applies'}"><ToggleSwitch IsChecked="{Binding NotifyChannelMessages}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Room posts'}"><ToggleSwitch IsChecked="{Binding NotifyRoomMessages}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'New nodes'}"><ToggleSwitch IsChecked="{Binding NotifyNewContacts}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Low radio battery'}"><ToggleSwitch IsChecked="{Binding NotifyLowBattery}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Sound'}"><ToggleSwitch IsChecked="{Binding NotificationSound}" /></ctl:SettingRow>
+            </StackPanel>
+          </Border>
+          <Button Content="{l:T 'Send a test notification'}" Command="{Binding TestNotificationCommand}" Margin="0,8,0,0" IsEnabled="{Binding NotificationsEnabled}" />
+          <TextBlock Classes="groupname" Text="{l:T 'Lock screen'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Status on the lock screen'}" Hint="{l:T 'New messages and radio battery while the PC is locked'}" WrapWidth="560">
+                <ToggleSwitch IsChecked="{Binding LockScreenStatus}" />
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Lock screen widget'}" Hint="{Binding WidgetDescription}" WrapWidth="620" IsVisible="{Binding HasWidget}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <ProgressBar IsIndeterminate="True" Width="60" IsVisible="{Binding IsWidgetBusy}" VerticalAlignment="Center" />
+                  <Button Classes="accent" Content="{Binding WidgetInstallText}" Command="{Binding InstallWidgetCommand}" IsVisible="{Binding WidgetCanInstall}" IsEnabled="{Binding !IsWidgetBusy}" />
+                  <Button Content="{l:T 'Remove'}" Command="{Binding RemoveWidgetCommand}" IsVisible="{Binding WidgetCanRemove}" IsEnabled="{Binding !IsWidgetBusy}" />
+                </StackPanel>
+              </ctl:SettingRow>
+            </StackPanel>
+          </Border>
+          <TextBlock Classes="hint" TextWrapping="Wrap" Margin="4,6,0,0" IsVisible="{Binding HasWidget}"
+                     Text="{l:T 'The status card needs “Show notifications on the lock screen” turned on in Windows. Installing the widget asks once for administrator permission so Windows trusts it; then add MeshCore in Windows Settings ▸ Personalization ▸ Lock screen, or on the Widgets board (Win+W).'}" />
+          <Button Content="{l:T 'Open lock screen settings'}" Command="{Binding OpenLockScreenSettingsCommand}" Margin="0,8,0,0" IsVisible="{Binding HasWidget}" />
+        </StackPanel>
+
+        <!-- Backup & storage -->
+        <StackPanel Classes="page" IsVisible="{Binding IsData}">
+          <TextBlock Classes="h2" Text="{l:T 'Backup &amp; storage'}" />
+          <!-- Backups need the radio disconnected -->
+          <Border Classes="banner" Margin="0,4,0,8" IsVisible="{Binding IsRadioConnected}">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <PathIcon Classes="small" Data="{StaticResource Icon.InformationOutline}" Margin="0,0,10,0" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{l:T 'Disconnect the radio to back up, restore or export.'}" TextWrapping="Wrap" VerticalAlignment="Center" />
+              <Button Grid.Column="2" Content="{l:T 'Disconnect'}" Margin="10,0,0,0" Command="{Binding DisconnectRadioCommand}" />
+            </Grid>
+          </Border>
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Backup'}" Hint="{l:T 'Messages, contacts, channels, saved paths and settings (.mc1backup)'}" WrapWidth="560">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Button Content="{l:T 'Back up…'}" Command="{Binding BackupAppDataCommand}" IsEnabled="{Binding CanTransfer}" />
+                  <Button Content="{l:T 'Restore…'}" Command="{Binding RestoreAppDataCommand}" IsEnabled="{Binding CanTransfer}" />
+                </StackPanel>
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'App settings'}" Hint="{l:T 'Export as JSON'}">
+                <Button Content="{l:T 'Export…'}" Command="{Binding ExportSettingsCommand}" IsEnabled="{Binding CanTransfer}" />
+              </ctl:SettingRow>
+            </StackPanel>
+          </Border>
+          <TextBlock Classes="hint" Margin="4,6,0,0" TextWrapping="Wrap"
+                     Text="{l:T 'Backups open in MeshCore One on iPhone, iPad and Mac, and phone backups can be restored here. Radio settings, channels and contacts from a backup are written to the radio the next time you connect it.'}" />
+          <!-- A restore waiting for its radio -->
+          <Border Classes="group" Margin="0,10,0,0" IsVisible="{Binding HasPendingRadioWrite}">
+            <ctl:SettingRow Title="{l:T 'Waiting for the radio'}" Hint="{Binding PendingSummary}" WrapWidth="560">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Classes="accent" Content="{l:T 'Write now'}" Command="{Binding ApplyPendingNowCommand}" IsEnabled="{Binding CanApplyPending}" />
+                <Button Content="{l:T 'Discard'}" Command="{Binding DiscardPendingCommand}" />
+              </StackPanel>
+            </ctl:SettingRow>
+          </Border>
+          <TextBlock Classes="groupname" Text="{l:T 'Storage'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Map tiles'}" Hint="{Binding TileCacheSize}"><Button Content="{l:T 'Clear'}" Command="{Binding ClearTileCacheCommand}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Link preview images'}"><Button Content="{l:T 'Clear'}" Command="{Binding ClearLinkPreviewsCommand}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Data folder'}" Hint="{Binding DataFolder}"><Button Content="{l:T 'Open'}" Command="{Binding OpenDataFolderCommand}" /></ctl:SettingRow>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Diagnostics -->
+        <StackPanel Classes="page" IsVisible="{Binding IsDiagnostics}">
+          <TextBlock Classes="h2" Text="{l:T 'Diagnostics'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ctl:SettingRow Title="{l:T 'Record RX log'}"><ToggleSwitch IsChecked="{Binding RxLogEnabled}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'RX log size'}" Hint="{l:T 'Entries to keep'}">
+                <NumericUpDown Value="{Binding RxLogMaxEntries}" Minimum="100" Maximum="50000" Increment="500" FormatString="0" Width="140" />
+              </ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'Verbose logging'}" Hint="{l:T 'Every frame to and from the radio'}"><ToggleSwitch IsChecked="{Binding DebugLogging}" /></ctl:SettingRow>
+              <ctl:SettingRow Title="{l:T 'App log'}"><Button Content="{l:T 'View…'}" Command="{Binding ShowLogCommand}" /></ctl:SettingRow>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- About -->
+        <StackPanel Classes="page" IsVisible="{Binding IsAbout}">
+          <TextBlock Classes="h2" Text="{l:T 'About'}" />
+          <Border Classes="group" Padding="16,14">
+            <Grid ColumnDefinitions="Auto,*">
+              <Image Source="/Assets/AppIcon256.png" Width="56" Height="56" VerticalAlignment="Top" />
+              <StackPanel Grid.Column="1" Margin="14,0,0,0" Spacing="3">
+                <TextBlock Text="{l:T 'MeshCore for Windows'}" FontWeight="SemiBold" FontSize="16" />
+                <TextBlock Text="{Binding Version, StringFormat={l:T 'Version {0}'}}" Classes="caption" />
+                <TextBlock Classes="hint" TextWrapping="Wrap" Text="{l:T 'A Windows app for MeshCore LoRa mesh radios, over Bluetooth, USB and WiFi.'}" />
+                <WrapPanel Margin="0,4,0,0">
+                  <Button Classes="link" Content="meshcore.io" ToolTip.Tip="{l:T 'The official MeshCore website'}" Command="{Binding OpenUrlCommand}" CommandParameter="https://meshcore.io" Margin="0,0,16,0" />
+                  <Button Classes="link" Content="Source code" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Yandi9/Meshcore-App-for-Desktop" Margin="0,0,16,0" />
+                  <Button Classes="link" Content="{l:T 'MeshCore on GitHub'}" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/meshcore-dev/MeshCore" />
+                </WrapPanel>
+              </StackPanel>
+            </Grid>
+          </Border>
+
+          <TextBlock Classes="groupname" Text="{l:T 'Developer'}" />
+          <Border Classes="group" Padding="16,14">
+            <Grid ColumnDefinitions="Auto,*">
+              <Border Width="56" Height="56" CornerRadius="28" Background="{DynamicResource App.Accent}" VerticalAlignment="Top">
+                <TextBlock Text="Y" Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </Border>
+              <StackPanel Grid.Column="1" Margin="14,0,0,0" Spacing="4">
+                <TextBlock Text="{l:T 'YndreW'}" FontWeight="SemiBold" FontSize="16" />
+                <TextBlock Text="{l:T 'Designed and developed MeshCore for Windows'}" Classes="caption" />
+
+              </StackPanel>
+            </Grid>
+          </Border>
+
+          <TextBlock Classes="groupname" Text="{l:T 'Credits'}" />
+          <Button Classes="link" Content="MeshCore One — Avi0n and contributors" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Avi0n/MeshCoreOne" />
+          <TextBlock Classes="hint" Text="Desktop adaptation: YndreW" TextWrapping="Wrap" />
+          <Border Classes="group" Padding="16,12">
+            <TextBlock Classes="hint" TextWrapping="Wrap"
+                       Text="{l:T 'Based on MeshCore One (GPL-3.0); this app is GPL-3.0 too. Icons: Material Design Icons (Apache 2.0). Maps: © OpenStreetMap contributors, OpenFreeMap, OpenTopoMap, Esri. Elevation: Open-Meteo. Pictures: meshpic.org.'}" />
+          </Border>
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

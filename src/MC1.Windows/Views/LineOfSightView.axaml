@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.LineOfSightView"
+             x:DataType="vm:LineOfSightViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="24,18" Spacing="10">
+      <TextBlock Classes="pagetitle" Text="{l:T 'Line of Sight'}" />
+      <TextBlock Classes="hint" Text="{l:T 'Checks terrain between two points using elevation data, and estimates Fresnel-zone clearance and path loss. Works without a radio.'}" />
+      <Grid ColumnDefinitions="*,Auto,*">
+        <Border Classes="group" Padding="14,10">
+          <StackPanel Spacing="6">
+            <TextBlock Classes="h3" Text="{l:T 'Point A'}" />
+            <ComboBox ItemsSource="{Binding Places}" SelectedItem="{Binding PickA}" PlaceholderText="{l:T 'Pick a node…'}" HorizontalAlignment="Stretch" />
+            <TextBox Text="{Binding NameA}" Watermark="{l:T 'Label'}" />
+            <Grid ColumnDefinitions="*,*,Auto">
+              <TextBox Text="{Binding LatA}" Watermark="{l:T 'Latitude'}" Margin="0,0,4,0" />
+              <TextBox Grid.Column="1" Text="{Binding LonA}" Watermark="{l:T 'Longitude'}" Margin="4,0" />
+              <Button Grid.Column="2" Classes="icon" ToolTip.Tip="{l:T 'Paste coordinates'}" Command="{Binding PasteACommand}"><PathIcon Classes="small" Data="{StaticResource Icon.ContentPaste}" /></Button>
+            </Grid>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="{l:T 'Antenna height (m)'}" VerticalAlignment="Center" />
+              <NumericUpDown Value="{Binding HeightA}" Minimum="0" Maximum="500" Increment="1" FormatString="0.#" Width="120" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        <Button Grid.Column="1" Classes="icon" VerticalAlignment="Center" Margin="6,0" ToolTip.Tip="{l:T 'Swap A and B'}" Command="{Binding SwapCommand}">
+          <PathIcon Data="{StaticResource Icon.SwapVertical}" RenderTransform="rotate(90deg)" />
+        </Button>
+        <Border Grid.Column="2" Classes="group" Padding="14,10">
+          <StackPanel Spacing="6">
+            <TextBlock Classes="h3" Text="{l:T 'Point B'}" />
+            <ComboBox ItemsSource="{Binding Places}" SelectedItem="{Binding PickB}" PlaceholderText="{l:T 'Pick a node…'}" HorizontalAlignment="Stretch" />
+            <TextBox Text="{Binding NameB}" Watermark="{l:T 'Label'}" />
+            <Grid ColumnDefinitions="*,*,Auto">
+              <TextBox Text="{Binding LatB}" Watermark="{l:T 'Latitude'}" Margin="0,0,4,0" />
+              <TextBox Grid.Column="1" Text="{Binding LonB}" Watermark="{l:T 'Longitude'}" Margin="4,0" />
+              <Button Grid.Column="2" Classes="icon" ToolTip.Tip="{l:T 'Paste coordinates'}" Command="{Binding PasteBCommand}"><PathIcon Classes="small" Data="{StaticResource Icon.ContentPaste}" /></Button>
+            </Grid>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="{l:T 'Antenna height (m)'}" VerticalAlignment="Center" />
+              <NumericUpDown Value="{Binding HeightB}" Minimum="0" Maximum="500" Increment="1" FormatString="0.#" Width="120" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Grid>
+      <WrapPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,20,6">
+          <TextBlock Text="{l:T 'Frequency (MHz)'}" VerticalAlignment="Center" />
+          <NumericUpDown Value="{Binding FrequencyMHz}" Minimum="100" Maximum="2500" Increment="1" FormatString="0.###" Width="140" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,20,6">
+          <TextBlock Text="{l:T 'Refraction k'}" VerticalAlignment="Center" ToolTip.Tip="{l:T 'Effective earth-radius factor. 1.33 (4/3) is typical; lower is more conservative.'}" />
+          <ComboBox ItemsSource="{Binding KFactors}" SelectedItem="{Binding RefractionK}" MinWidth="90" />
+        </StackPanel>
+        <Button Classes="accent" Command="{Binding AnalyzeCommand}" IsEnabled="{Binding !IsBusy}" Margin="0,0,8,6">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.Terrain}" Foreground="White" />
+            <TextBlock Text="{l:T 'Analyze'}" Foreground="White" />
+          </StackPanel>
+        </Button>
+        <Button Content="{l:T 'Show on map'}" Command="{Binding ShowOnMapCommand}" Margin="0,0,8,6" />
+        <ProgressBar IsIndeterminate="True" Width="80" IsVisible="{Binding IsBusy}" VerticalAlignment="Center" />
+      </WrapPanel>
+      <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Classes="secondary" IsVisible="{Binding Status, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+      <Border Classes="card" Padding="8" Height="300">
+        <ctl:TerrainProfile Profile="{Binding Profile}" HeightA="{Binding HeightA}" HeightB="{Binding HeightB}" FrequencyMHz="{Binding FrequencyMHz}"
+                            RefractionK="{Binding RefractionK}" Metric="{Binding Metric}" LabelA="{Binding NameA}" LabelB="{Binding NameB}" />
+      </Border>
+
+      <Border Classes="group" Padding="16,10" IsVisible="{Binding HasResult}">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding Verdict}" Classes="h3" Foreground="{Binding VerdictColor, Converter={x:Static conv:HexBrushConverter.Instance}}" />
+          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="16">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" MinWidth="184" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Classes="secondary" Text="{l:T 'Distance'}" /><TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DistanceText}" />
+            <TextBlock Grid.Row="1" Classes="secondary" Text="{l:T 'Bearing A → B'}" /><TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding BearingText}" />
+            <TextBlock Grid.Row="2" Classes="secondary" Text="{l:T 'Terrain elevation'}" /><TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ElevationText}" />
+            <TextBlock Grid.Row="3" Classes="secondary" Text="{l:T 'Worst clearance'}" /><TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ClearanceText}" />
+            <TextBlock Grid.Row="4" Classes="secondary" Text="{l:T 'Free-space path loss'}" /><TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding FsplText}" />
+            <TextBlock Grid.Row="5" Classes="secondary" Text="{l:T 'Diffraction loss'}" /><TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding DiffractionText}" />
+            <TextBlock Grid.Row="6" Classes="secondary" Text="{l:T 'Total path loss'}" /><TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding TotalLossText}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="7" Classes="secondary" Text="{l:T 'Estimated link margin'}" /><TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding MarginText}" TextWrapping="Wrap" />
+          </Grid>
+          <TextBlock Classes="hint" Margin="0,6,0,0" Text="{l:T 'Elevation data: Open-Meteo (Copernicus DEM, ~90 m resolution). Buildings and trees are not included.'}" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

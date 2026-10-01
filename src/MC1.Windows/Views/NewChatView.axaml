@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:m="using:MC1.Core.Models"
+             x:Class="MC1.Windows.Views.NewChatView"
+             x:DataType="vm:NewChatViewModel">
+  <TabControl Classes="pages" Margin="12,8">
+    <TabItem Header="{l:T 'Direct message'}">
+      <DockPanel Margin="4,10,4,4">
+        <TextBox DockPanel.Dock="Top" Watermark="{l:T 'Search contacts'}" Text="{Binding Search}" Margin="0,0,0,8" />
+        <ListBox Classes="plain" ItemsSource="{Binding Contacts}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="m:ContactRecord">
+              <Button Classes="row" Command="{Binding $parent[UserControl].((vm:NewChatViewModel)DataContext).OpenContactCommand}" CommandParameter="{Binding}">
+                <StackPanel>
+                  <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding RouteDescription}" Classes="caption" />
+                </StackPanel>
+              </Button>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </TabItem>
+    <TabItem Header="{l:T 'Channels'}">
+      <ScrollViewer>
+        <StackPanel Margin="4,12" Spacing="8">
+          <TextBlock Classes="h3" Text="{l:T 'Join a hashtag channel'}" />
+          <TextBlock Classes="hint" Text="{l:T 'Open channels anyone can join by name, e.g. #local or #test. The key is derived from the name.'}" />
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding Hashtag}" Watermark="{l:T '#channel-name'}" />
+            <Button Grid.Column="1" Classes="accent" Content="{l:T 'Join'}" Margin="8,0,0,0" Command="{Binding JoinHashtagCommand}" />
+          </Grid>
+          <Separator />
+          <TextBlock Classes="h3" Text="{l:T 'Create a private channel'}" />
+          <TextBlock Classes="hint" Text="{l:T 'Generates a random secret key. Share the channel\'s QR code or link with the people who should join.'}" />
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding PrivateName}" Watermark="{l:T 'Channel name'}" />
+            <Button Grid.Column="1" Classes="accent" Content="{l:T 'Create'}" Margin="8,0,0,0" Command="{Binding CreatePrivateCommand}" />
+          </Grid>
+          <Separator />
+          <TextBlock Classes="h3" Text="{l:T 'Join from a link'}" />
+          <TextBlock Classes="hint" Text="{l:T 'Paste a meshcore://channel/add link someone shared with you.'}" />
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding ChannelLink}" Watermark="{l:T 'meshcore://channel/add?…'}" />
+            <Button Grid.Column="1" Classes="accent" Content="{l:T 'Join'}" Margin="8,0,0,0" Command="{Binding JoinFromLinkCommand}" />
+          </Grid>
+          <Separator />
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel>
+              <TextBlock Classes="h3" Text="{l:T 'Public channel'}" />
+              <TextBlock Classes="hint" Text="{l:T 'The default open channel shared by all MeshCore users.'}" />
+            </StackPanel>
+            <Button Grid.Column="1" Content="{l:T 'Add Public'}" VerticalAlignment="Center" Command="{Binding JoinPublicCommand}" />
+          </Grid>
+          <TextBlock Classes="error" Text="{Binding Error}" IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        </StackPanel>
+      </ScrollViewer>
+    </TabItem>
+  </TabControl>
+</UserControl>

@@ -1,0 +1,92 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:MC1.Windows"
+             x:Class="MC1.Windows.App"
+             Name="MeshCore"
+             RequestedThemeVariant="Default">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://MeshCoreOne/Assets/Icons.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="App.Background" Color="#F3F5F9" />
+          <SolidColorBrush x:Key="App.Surface" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="App.SurfaceAlt" Color="#F7F8FB" />
+          <SolidColorBrush x:Key="App.Sidebar" Color="#E9EDF4" />
+          <SolidColorBrush x:Key="App.Border" Color="#DDE2EA" />
+          <SolidColorBrush x:Key="App.Text" Color="#141A24" />
+          <SolidColorBrush x:Key="App.TextSecondary" Color="#5F6B7C" />
+          <SolidColorBrush x:Key="App.TextTertiary" Color="#8A94A4" />
+          <SolidColorBrush x:Key="App.BubbleIn" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="App.BubbleInBorder" Color="#E1E6EE" />
+          <SolidColorBrush x:Key="App.BubbleOut" Color="#2463EB" />
+          <SolidColorBrush x:Key="App.BubbleOutText" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="App.Selection" Color="#DCE7FD" />
+          <SolidColorBrush x:Key="App.Hover" Color="#EEF2F8" />
+          <SolidColorBrush x:Key="App.Chip" Color="#EEF1F6" />
+          <SolidColorBrush x:Key="App.Mention" Color="#FFF4D6" />
+          <SolidColorBrush x:Key="App.CodeBackground" Color="#0F1720" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="App.Background" Color="#111418" />
+          <SolidColorBrush x:Key="App.Surface" Color="#1A1E24" />
+          <SolidColorBrush x:Key="App.SurfaceAlt" Color="#161A1F" />
+          <SolidColorBrush x:Key="App.Sidebar" Color="#0C0F12" />
+          <SolidColorBrush x:Key="App.Border" Color="#2A3038" />
+          <SolidColorBrush x:Key="App.Text" Color="#E9EDF2" />
+          <SolidColorBrush x:Key="App.TextSecondary" Color="#A0AAB8" />
+          <SolidColorBrush x:Key="App.TextTertiary" Color="#6E7886" />
+          <SolidColorBrush x:Key="App.BubbleIn" Color="#232830" />
+          <SolidColorBrush x:Key="App.BubbleInBorder" Color="#2C323B" />
+          <SolidColorBrush x:Key="App.BubbleOut" Color="#2463EB" />
+          <SolidColorBrush x:Key="App.BubbleOutText" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="App.Selection" Color="#1E3257" />
+          <SolidColorBrush x:Key="App.Hover" Color="#20252C" />
+          <SolidColorBrush x:Key="App.Chip" Color="#262B33" />
+          <SolidColorBrush x:Key="App.Mention" Color="#3A3120" />
+          <SolidColorBrush x:Key="App.CodeBackground" Color="#0A0D10" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <SolidColorBrush x:Key="App.Accent" Color="#2463EB" />
+      <SolidColorBrush x:Key="App.Success" Color="#22A559" />
+      <SolidColorBrush x:Key="App.Warning" Color="#E5A00D" />
+      <SolidColorBrush x:Key="App.Danger" Color="#E5484D" />
+      <SolidColorBrush x:Key="App.Repeater" Color="#8B5CF6" />
+      <SolidColorBrush x:Key="App.Room" Color="#F59E0B" />
+      <SolidColorBrush x:Key="App.Companion" Color="#2463EB" />
+      <SolidColorBrush x:Key="App.Sensor" Color="#14B8A6" />
+      <FontFamily x:Key="App.MonoFont">Cascadia Mono, Consolas, Courier New, monospace</FontFamily>
+    </ResourceDictionary>
+  </Application.Resources>
+
+  <Application.DataTemplates>
+    <local:ViewLocator />
+  </Application.DataTemplates>
+
+  <Application.Styles>
+    <FluentTheme>
+      <FluentTheme.Palettes>
+        <ColorPaletteResources x:Key="Light" Accent="#2463EB" RegionColor="#F3F5F9" />
+        <ColorPaletteResources x:Key="Dark" Accent="#3B7BFF" RegionColor="#111418" />
+      </FluentTheme.Palettes>
+    </FluentTheme>
+    <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+    <StyleInclude Source="avares://MeshCoreOne/Styles/AppStyles.axaml" />
+  </Application.Styles>
+
+  <TrayIcon.Icons>
+    <TrayIcons>
+      <TrayIcon Icon="/Assets/AppIcon.ico" ToolTipText="MeshCore" Clicked="TrayIcon_OnClicked">
+        <TrayIcon.Menu>
+          <NativeMenu>
+            <NativeMenuItem Header="Open MeshCore" Click="TrayOpen_OnClick" />
+            <NativeMenuItemSeparator />
+            <NativeMenuItem Header="Quit" Click="TrayQuit_OnClick" />
+          </NativeMenu>
+        </TrayIcon.Menu>
+      </TrayIcon>
+    </TrayIcons>
+  </TrayIcon.Icons>
+</Application>

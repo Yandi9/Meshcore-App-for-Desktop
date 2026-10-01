@@ -1,0 +1,6 @@
+Microsoft.Web.WebView2 1.0.4258.31
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (file): LICENSE.txt
+Project: https://aka.ms/webview
+Package: https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.4258.31

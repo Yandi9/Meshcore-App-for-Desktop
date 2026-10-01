@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:svc="using:MC1.Core.Services"
+             x:Class="MC1.Windows.Views.LogViewerView"
+             x:DataType="vm:LogViewerViewModel">
+  <DockPanel Margin="16,12">
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto,Auto,Auto,Auto" Margin="0,0,0,8">
+      <TextBox Watermark="{l:T 'Filter'}" Text="{Binding Filter}" />
+      <CheckBox Grid.Column="1" Content="{l:T 'Warnings only'}" IsChecked="{Binding WarningsOnly}" Margin="10,0" />
+      <Button Grid.Column="2" Content="{l:T 'Refresh'}" Command="{Binding RefreshCommand}" Margin="0,0,6,0" />
+      <Button Grid.Column="3" Content="{l:T 'Copy'}" Command="{Binding CopyCommand}" Margin="0,0,6,0" />
+      <Button Grid.Column="4" Content="{l:T 'Export…'}" Command="{Binding ExportCommand}" />
+    </Grid>
+    <Border Background="{DynamicResource App.CodeBackground}" CornerRadius="8" Padding="10">
+      <ListBox ItemsSource="{Binding Entries}" Background="Transparent">
+        <ListBox.Styles>
+          <Style Selector="ListBoxItem"><Setter Property="Padding" Value="2,1" /><Setter Property="MinHeight" Value="0" /></Style>
+        </ListBox.Styles>
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="svc:LogEntry">
+            <SelectableTextBlock Text="{Binding}" Classes="mono" FontSize="11.5" Foreground="#D1D5DB" TextWrapping="Wrap" />
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Border>
+  </DockPanel>
+</UserControl>

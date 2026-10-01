@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The MeshCore widget package. build.sh fills in {VERSION} and {ARCH}. The class id must match Program.ProviderClsid. -->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 com rescap">
+
+  <Identity Name="MeshCore.LockScreenWidget" Publisher="CN=MeshCore" Version="{VERSION}" ProcessorArchitecture="{ARCH}" />
+
+  <Properties>
+    <DisplayName>MeshCore widget</DisplayName>
+    <PublisherDisplayName>MeshCore</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+    <PackageDependency Name="Microsoft.WindowsAppRuntime.2" MinVersion="2.5.1.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" Executable="MeshCoreWidget.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="MeshCore widget" Description="New messages and radio battery from MeshCore" BackgroundColor="transparent"
+                          Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" AppListEntry="none" />
+      <Extensions>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="MeshCoreWidget.exe" Arguments="-RegisterProcessAsComServer" DisplayName="MeshCore widget provider">
+              <com:Class Id="6B3B5C63-4E0A-4B8A-9D0C-2C1F4A7E5B91" DisplayName="MeshCore widget provider" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="com.microsoft.windows.widgets" DisplayName="MeshCore" Id="MeshCoreWidgets" PublicFolder="Assets">
+            <uap3:Properties>
+              <WidgetProvider>
+                <ProviderIcons>
+                  <Icon Path="Assets\ProviderIcon.png" />
+                </ProviderIcons>
+                <Activation>
+                  <CreateInstance ClassId="6B3B5C63-4E0A-4B8A-9D0C-2C1F4A7E5B91" />
+                </Activation>
+                <Definitions>
+                  <Definition Id="MeshCoreStatus" DisplayName="MeshCore" Description="New messages and your radio's battery">
+                    <Capabilities>
+                      <Capability>
+                        <Size Name="small" />
+                      </Capability>
+                      <Capability>
+                        <Size Name="medium" />
+                      </Capability>
+                    </Capabilities>
+                    <ThemeResources>
+                      <Icons>
+                        <Icon Path="Assets\WidgetIcon.png" />
+                      </Icons>
+                      <Screenshots>
+                        <Screenshot Path="Assets\WidgetScreenshot.png" DisplayAltText="MeshCore widget with 3 new messages and radio battery 87%" />
+                      </Screenshots>
+                      <DarkMode>
+                        <Icons>
+                          <Icon Path="Assets\WidgetIcon.png" />
+                        </Icons>
+                        <Screenshots>
+                          <Screenshot Path="Assets\WidgetScreenshot.png" DisplayAltText="MeshCore widget with 3 new messages and radio battery 87%" />
+                        </Screenshots>
+                      </DarkMode>
+                      <LightMode>
+                        <Icons>
+                          <Icon Path="Assets\WidgetIcon.png" />
+                        </Icons>
+                        <Screenshots>
+                          <Screenshot Path="Assets\WidgetScreenshotLight.png" DisplayAltText="MeshCore widget with 3 new messages and radio battery 87%" />
+                        </Screenshots>
+                      </LightMode>
+                    </ThemeResources>
+                  </Definition>
+                </Definitions>
+              </WidgetProvider>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

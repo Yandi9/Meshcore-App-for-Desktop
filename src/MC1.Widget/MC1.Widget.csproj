@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The MeshCore lock screen widget: a small Windows widget provider (packaged as an .msix, see packaging/widget). -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <AssemblyName>MeshCoreWidget</AssemblyName>
+    <RootNamespace>MC1.Widget</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>..\MC1.Windows\Assets\AppIcon.ico</ApplicationIcon>
+    <Title>MeshCore widget</Title>
+    <Product>MeshCore</Product>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Only the Widgets API projection; the native part comes from the Windows App Runtime framework package. -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="2.0.5" ExcludeAssets="build;buildTransitive;native;contentFiles" />
+  </ItemGroup>
+</Project>

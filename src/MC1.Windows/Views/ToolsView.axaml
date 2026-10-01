@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.ToolsView"
+             x:DataType="vm:ToolsViewModel">
+  <Grid ColumnDefinitions="290,*">
+    <Border Classes="pane">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Classes="pagetitle" Text="{l:T 'Tools'}" Margin="16,14,16,10" />
+        <ListBox Classes="plain" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ToolItem">
+              <Grid ColumnDefinitions="Auto,*">
+                <Border Width="34" Height="34" CornerRadius="8" Background="{DynamicResource App.Chip}" VerticalAlignment="Center">
+                  <PathIcon Data="{Binding IconKey, Converter={x:Static conv:IconConverter.Instance}}" Foreground="{DynamicResource App.Accent}" />
+                </Border>
+                <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding Subtitle}" Classes="caption" TextWrapping="Wrap" />
+                </StackPanel>
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Border>
+    <ContentControl Grid.Column="1" Content="{Binding Current}" />
+  </Grid>
+</UserControl>

@@ -1,0 +1,130 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:svc="using:MC1.Windows.Services"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             x:Class="MC1.Windows.Views.MapView"
+             x:DataType="vm:MapViewModel">
+  <Panel>
+    <ctl:MapControl x:Name="Map"
+                    CenterLatitude="{Binding CenterLatitude}" CenterLongitude="{Binding CenterLongitude}" Zoom="{Binding Zoom}"
+                    LayerId="{Binding LayerId}" Markers="{Binding Markers}" Lines="{Binding Lines}"
+                    SelectedMarker="{Binding SelectedMarker}" ShowLabels="{Binding ShowLabels}" Metric="{Binding Metric}" />
+
+    <!-- Top-left: search, layers, filters -->
+    <Border Classes="card" Padding="10" Margin="14" HorizontalAlignment="Left" VerticalAlignment="Top" BoxShadow="0 4 14 0 #22000000" Width="300">
+      <StackPanel Spacing="8">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBox x:Name="SearchBox" Watermark="{l:T 'Find a node'}" Text="{Binding Search}">
+            <TextBox.InnerLeftContent>
+              <PathIcon Classes="small" Data="{StaticResource Icon.Magnify}" Margin="8,0,0,0" Foreground="{DynamicResource App.TextTertiary}" />
+            </TextBox.InnerLeftContent>
+          </TextBox>
+          <Button Grid.Column="1" Classes="icon" Margin="4,0,0,0" Command="{Binding RunSearchCommand}" ToolTip.Tip="{l:T 'Go'}">
+            <PathIcon Classes="small" Data="{StaticResource Icon.ChevronRight}" />
+          </Button>
+        </Grid>
+        <ComboBox ItemsSource="{Binding Layers}" SelectedValue="{Binding LayerId}" SelectedValueBinding="{Binding Id, DataType=svc:MapLayerInfo}" HorizontalAlignment="Stretch">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="svc:MapLayerInfo">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Classes="small" Data="{StaticResource Icon.LayersOutline}" />
+                <TextBlock Text="{Binding Name}" />
+              </StackPanel>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <WrapPanel>
+          <CheckBox Content="{l:T 'Companions'}" IsChecked="{Binding ShowChat}" Margin="0,0,10,0" />
+          <CheckBox Content="{l:T 'Repeaters'}" IsChecked="{Binding ShowRepeaters}" Margin="0,0,10,0" />
+          <CheckBox Content="{l:T 'Rooms'}" IsChecked="{Binding ShowRooms}" Margin="0,0,10,0" />
+          <CheckBox Content="{l:T 'Discovered'}" IsChecked="{Binding ShowDiscovered}" Margin="0,0,10,0" />
+          <CheckBox Content="{l:T 'Labels'}" IsChecked="{Binding ShowLabels}" />
+        </WrapPanel>
+        <TextBlock Classes="tertiary" Text="{Binding Summary}" />
+      </StackPanel>
+    </Border>
+
+    <!-- Top-right: map controls -->
+    <Border Classes="card" Padding="4" Margin="14" HorizontalAlignment="Right" VerticalAlignment="Top" BoxShadow="0 4 14 0 #22000000">
+      <StackPanel Spacing="2">
+        <Button Classes="icon" Command="{Binding ZoomInCommand}" ToolTip.Tip="{l:T 'Zoom in'}"><PathIcon Data="{StaticResource Icon.Plus}" /></Button>
+        <Button Classes="icon" Command="{Binding ZoomOutCommand}" ToolTip.Tip="{l:T 'Zoom out'}"><PathIcon Data="{StaticResource Icon.Minus}" /></Button>
+        <Separator Margin="4,2" />
+        <Button Classes="icon" Command="{Binding CenterOnMeCommand}" ToolTip.Tip="{l:T 'Center on my radio'}"><PathIcon Data="{StaticResource Icon.CrosshairsGps}" /></Button>
+        <Button Classes="icon" Command="{Binding FitAllCommand}" ToolTip.Tip="{l:T 'Show all nodes'}"><PathIcon Data="{StaticResource Icon.Resize}" /></Button>
+        <Button Classes="icon" Command="{Binding ToggleDownloadPanelCommand}" ToolTip.Tip="{l:T 'Offline maps'}"><PathIcon Data="{StaticResource Icon.Download}" /></Button>
+      </StackPanel>
+    </Border>
+
+    <!-- Offline download panel -->
+    <Border Classes="card" Margin="0,14,70,14" Width="330" HorizontalAlignment="Right" VerticalAlignment="Top" BoxShadow="0 4 14 0 #22000000"
+            IsVisible="{Binding IsDownloadPanelOpen}">
+      <StackPanel Spacing="8">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Classes="h3" Text="{l:T 'Offline maps'}" />
+          <Button Grid.Column="1" Classes="icon" Command="{Binding ToggleDownloadPanelCommand}"><PathIcon Classes="small" Data="{StaticResource Icon.Close}" /></Button>
+        </Grid>
+        <TextBlock Classes="hint" Text="{l:T 'Download the visible area of the current layer so the map works without internet.'}" />
+        <Grid ColumnDefinitions="Auto,*,Auto,*" RowDefinitions="Auto">
+          <TextBlock Text="{l:T 'Zoom'}" VerticalAlignment="Center" Margin="0,0,8,0" />
+          <NumericUpDown Grid.Column="1" Minimum="1" Maximum="17" Value="{Binding DownloadMinZoom}" FormatString="0" Increment="1" />
+          <TextBlock Grid.Column="2" Text="{l:T 'to'}" VerticalAlignment="Center" Margin="8,0" />
+          <NumericUpDown Grid.Column="3" Minimum="1" Maximum="17" Value="{Binding DownloadMaxZoom}" FormatString="0" Increment="1" />
+        </Grid>
+        <TextBlock Classes="caption" Text="{Binding DownloadEstimate}" TextWrapping="Wrap" />
+        <ProgressBar Value="{Binding DownloadProgress}" IsVisible="{Binding IsDownloading}" Height="6" />
+        <TextBlock Classes="caption" Text="{Binding DownloadText}" TextWrapping="Wrap" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Classes="accent" Content="{l:T 'Download area'}" Command="{Binding DownloadVisibleAreaCommand}" IsEnabled="{Binding !IsDownloading}" />
+          <Button Content="{l:T 'Cancel'}" Command="{Binding CancelDownloadCommand}" IsVisible="{Binding IsDownloading}" />
+        </StackPanel>
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Classes="tertiary" Text="{Binding CacheSize, StringFormat={l:T 'Stored on this PC: {0}'}}" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Classes="link" Content="{l:T 'Clear'}" Command="{Binding ClearTileCacheCommand}" />
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <!-- Path banner -->
+    <Border Classes="card" Padding="12,8" Margin="14" HorizontalAlignment="Center" VerticalAlignment="Top" BoxShadow="0 4 14 0 #22000000"
+            IsVisible="{Binding HasPath}">
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <PathIcon Classes="small" Data="{StaticResource Icon.MapMarkerPath}" Foreground="#7C3AED" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding PathSummary}" VerticalAlignment="Center" />
+        <Button Classes="link" Content="{l:T 'Clear'}" Command="{Binding ClearPathCommand}" />
+      </StackPanel>
+    </Border>
+
+    <!-- Selection card -->
+    <Border Classes="card" Margin="14,14,14,52" Width="340" HorizontalAlignment="Left" VerticalAlignment="Bottom" BoxShadow="0 4 14 0 #22000000"
+            IsVisible="{Binding HasSelection}">
+      <StackPanel Spacing="6">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel>
+            <TextBlock Text="{Binding SelName}" Classes="h3" TextTrimming="CharacterEllipsis" />
+            <TextBlock Text="{Binding SelType}" Classes="caption" />
+          </StackPanel>
+          <Button Grid.Column="1" Classes="icon" Command="{Binding CloseSelectionCommand}" VerticalAlignment="Top"><PathIcon Classes="small" Data="{StaticResource Icon.Close}" /></Button>
+        </Grid>
+        <TextBlock Text="{Binding SelDetail}" Classes="caption" TextWrapping="Wrap" />
+        <SelectableTextBlock Text="{Binding SelCoords}" Classes="mono" FontSize="12" />
+        <WrapPanel>
+          <Button Classes="accent" Content="{l:T 'Message'}" Margin="0,4,6,0" Command="{Binding MessageSelectedCommand}" IsVisible="{Binding SelCanMessage}" />
+          <Button Content="{l:T 'Manage'}" Margin="0,4,6,0" Command="{Binding ManageSelectedCommand}" IsVisible="{Binding SelCanManage}" />
+          <Button Content="{l:T 'Contact'}" Margin="0,4,6,0" Command="{Binding ShowSelectedContactCommand}" IsVisible="{Binding SelIsContact}" />
+          <Button Content="{l:T 'Add to radio'}" Margin="0,4,6,0" Command="{Binding AddSelectedCommand}" IsVisible="{Binding SelIsDiscovered}" />
+          <Button Content="{l:T 'Trace'}" Margin="0,4,6,0" Command="{Binding TraceToSelectedCommand}" IsVisible="{Binding SelCanManage}" />
+          <Button Content="{l:T 'Line of sight'}" Margin="0,4,6,0" Command="{Binding LineOfSightToSelectedCommand}" />
+          <Button Content="{l:T 'Copy'}" Margin="0,4,6,0" Command="{Binding CopySelectedCoordinatesCommand}" />
+        </WrapPanel>
+      </StackPanel>
+    </Border>
+
+    <!-- Pointer readout -->
+    <Border Background="#B3FFFFFF" CornerRadius="4" Padding="6,2" Margin="0,0,10,22" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsVisible="{Binding PointerText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+      <TextBlock Text="{Binding PointerText}" FontSize="11" Foreground="#333" Classes="mono" />
+    </Border>
+  </Panel>
+</UserControl>

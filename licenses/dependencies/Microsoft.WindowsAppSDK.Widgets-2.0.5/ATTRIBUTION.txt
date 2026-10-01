@@ -1,0 +1,6 @@
+Microsoft.WindowsAppSDK.Widgets 2.0.5
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (file): license.txt
+Project: https://github.com/microsoft/windowsappsdk
+Package: https://www.nuget.org/packages/Microsoft.WindowsAppSDK.Widgets/2.0.5

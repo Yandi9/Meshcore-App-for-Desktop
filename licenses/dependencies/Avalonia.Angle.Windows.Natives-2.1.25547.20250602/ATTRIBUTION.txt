@@ -1,0 +1,6 @@
+Avalonia.Angle.Windows.Natives 2.1.25547.20250602
+Authors: Avalonia Team
+Copyright: Copyright 2013-2025 © The AvaloniaUI Project
+License (file): LICENSE
+Project: https://avaloniaui.net/
+Package: https://www.nuget.org/packages/Avalonia.Angle.Windows.Natives/2.1.25547.20250602

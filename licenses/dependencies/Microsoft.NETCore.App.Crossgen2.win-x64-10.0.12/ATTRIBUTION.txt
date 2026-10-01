@@ -1,0 +1,6 @@
+Microsoft.NETCore.App.Crossgen2.win-x64 10.0.12
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (expression): MIT
+Project: https://dot.net/
+Package: https://www.nuget.org/packages/Microsoft.NETCore.App.Crossgen2.win-x64/10.0.12

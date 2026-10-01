@@ -1,0 +1,6 @@
+CommunityToolkit.Mvvm 8.4.2
+Authors: Microsoft
+Copyright: (c) .NET Foundation and Contributors. All rights reserved.
+License (expression): MIT
+Project: https://github.com/CommunityToolkit/dotnet
+Package: https://www.nuget.org/packages/CommunityToolkit.Mvvm/8.4.2

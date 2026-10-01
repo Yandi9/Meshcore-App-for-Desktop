@@ -1,0 +1,6 @@
+Microsoft.Data.Sqlite 10.0.12
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (expression): MIT
+Project: https://docs.microsoft.com/dotnet/standard/data/sqlite/
+Package: https://www.nuget.org/packages/Microsoft.Data.Sqlite/10.0.12

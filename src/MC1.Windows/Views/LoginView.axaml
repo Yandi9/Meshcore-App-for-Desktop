@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             x:Class="MC1.Windows.Views.LoginView"
+             x:DataType="vm:LoginViewModel">
+  <StackPanel Margin="24,20" Spacing="10">
+    <TextBlock Text="{Binding Title}" Classes="h2" />
+    <TextBlock Text="{Binding Hint}" Classes="hint" />
+    <TextBox x:Name="PasswordBox" Text="{Binding Password}" PasswordChar="•" Watermark="{l:T 'Password'}" RevealPassword="False" />
+    <CheckBox Content="{l:T 'Remember password on this PC (encrypted)'}" IsChecked="{Binding Remember}" />
+    <TextBlock Text="{Binding Progress}" Classes="caption" IsVisible="{Binding Busy}" />
+    <ProgressBar IsIndeterminate="True" IsVisible="{Binding Busy}" Height="4" />
+    <TextBlock Text="{Binding Error}" Classes="error" IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+      <Button Content="{l:T 'Cancel'}" Click="Cancel_OnClick" />
+      <Button Classes="accent" Content="{l:T 'Sign in'}" IsDefault="True" Command="{Binding SignInCommand}" IsEnabled="{Binding !Busy}" />
+    </StackPanel>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,6 @@
+System.Drawing.Common 4.7.0
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (expression): MIT
+Project: https://github.com/dotnet/corefx
+Package: https://www.nuget.org/packages/System.Drawing.Common/4.7.0

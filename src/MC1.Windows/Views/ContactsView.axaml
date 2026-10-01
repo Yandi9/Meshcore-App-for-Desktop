@@ -1,0 +1,167 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:m="using:MC1.Core.Models"
+             xmlns:conv="using:MC1.Windows.Converters"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             x:Class="MC1.Windows.Views.ContactsView"
+             x:DataType="vm:ContactsViewModel">
+  <Grid x:Name="Split" ColumnDefinitions="360,*">
+    <Border Classes="pane">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto,Auto,Auto" Margin="16,14,10,6">
+          <TextBlock Classes="pagetitle" Text="{l:T 'Contacts'}" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Classes="icon" ToolTip.Tip="{l:T 'Share my contact (QR)'}" Command="{Binding ShowMyCardCommand}">
+            <PathIcon Data="{StaticResource Icon.Qrcode}" />
+          </Button>
+          <Button Grid.Column="2" Classes="icon" ToolTip.Tip="{l:T 'Send advert'}">
+            <PathIcon Data="{StaticResource Icon.Broadcast}" />
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="{l:T 'Advertise to nearby nodes (zero hop)'}" Command="{Binding AdvertiseCommand}" CommandParameter="zero" />
+                <MenuItem Header="{l:T 'Advertise across the mesh (flood)'}" Command="{Binding AdvertiseCommand}" CommandParameter="flood" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+          <Button Grid.Column="3" Classes="icon" ToolTip.Tip="{l:T 'More'}">
+            <PathIcon Data="{StaticResource Icon.DotsVertical}" />
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="{l:T 'Add contact from link or code…'}" Command="{Binding AddContactCommand}" />
+                <MenuItem Header="{l:T 'Refresh from radio'}" Command="{Binding ResyncCommand}" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+        </Grid>
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,*" Margin="14,2,14,8">
+          <ToggleButton Classes="chip" Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="{l:T 'Contacts'}"
+                        IsChecked="{Binding IsContactsSegment, Mode=OneWay}" Command="{Binding ShowContactsCommand}" Margin="0,0,3,0" />
+          <ToggleButton Classes="chip" Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="{l:T 'Discover'}"
+                        IsChecked="{Binding IsDiscoverSegment, Mode=OneWay}" Command="{Binding ShowDiscoverCommand}" Margin="3,0,0,0" />
+        </Grid>
+
+        <!-- Contacts segment -->
+        <DockPanel IsVisible="{Binding IsContactsSegment}">
+          <TextBox DockPanel.Dock="Top" Watermark="{l:T 'Search name or key'}" Text="{Binding Search}" Margin="14,0,14,4">
+            <TextBox.InnerLeftContent>
+              <PathIcon Classes="small" Data="{StaticResource Icon.Magnify}" Margin="8,0,0,0" Foreground="{DynamicResource App.TextTertiary}" />
+            </TextBox.InnerLeftContent>
+          </TextBox>
+          <!-- Filter bubbles, like the Chats list -->
+          <ListBox DockPanel.Dock="Top" Classes="filterchips" ItemsSource="{Binding TypeFilters}" SelectedItem="{Binding TypeFilter}" Margin="10,0,10,6">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Converter={x:Static conv:EnumDisplayConverter.Instance}}" FontSize="12" />
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <TextBlock DockPanel.Dock="Bottom" Classes="tertiary" Text="{Binding CountText}" Margin="16,6,16,10" IsVisible="{Binding IsContactList}" />
+          <Panel>
+          <ListBox Classes="plain" ItemsSource="{Binding Contacts}" SelectedItem="{Binding Selected}" IsVisible="{Binding IsContactList}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ContactRow">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <ctl:Avatar Size="36" Emoji="{Binding Emoji}" IconKey="{Binding IconKey}" Color="{Binding Color}" />
+                  <StackPanel Grid.Column="1" Margin="10,0,6,0" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxWidth="200" />
+                      <PathIcon Classes="tiny" Data="{StaticResource Icon.Star}" Foreground="{DynamicResource App.Warning}" IsVisible="{Binding IsFavorite}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding Detail}" Classes="caption" TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="3">
+                    <TextBlock Text="{Binding Heard}" Classes="tertiary" HorizontalAlignment="Right" />
+                    <Border Classes="badge" HorizontalAlignment="Right" IsVisible="{Binding HasUnread}" ToolTip.Tip="{l:T 'Unread messages'}">
+                      <TextBlock Text="{Binding UnreadText}" />
+                    </Border>
+                  </StackPanel>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <!-- "Blocked" bubble -->
+          <ScrollViewer IsVisible="{Binding IsBlockedFilter}">
+            <StackPanel Margin="14,0,14,14">
+              <TextBlock Classes="hint" Text="{l:T 'Nothing is blocked.'}" Margin="4,8" IsVisible="{Binding HasNoBlocked}" />
+            <TextBlock Classes="section" Text="{l:T 'BLOCKED CONTACTS'}" />
+            <TextBlock Classes="hint" Text="{l:T 'Messages from blocked contacts are hidden.'}" Margin="4,0,0,6" />
+            <ItemsControl ItemsSource="{Binding BlockedContacts}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="m:ContactRecord">
+                  <Grid ColumnDefinitions="*,Auto" Margin="4,4">
+                    <StackPanel VerticalAlignment="Center">
+                      <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding ContactType, Converter={x:Static conv:ContactTypeNameConverter.Instance}}" Classes="caption" />
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="{l:T 'Unblock'}"
+                            Command="{Binding $parent[UserControl].((vm:ContactsViewModel)DataContext).UnblockCommand}" CommandParameter="{Binding}" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Classes="section" Text="{l:T 'BLOCKED CHANNEL SENDERS'}" />
+            <TextBlock Classes="hint" Text="{l:T 'Channel messages from these names are hidden.'}" Margin="4,0,0,6" />
+            <ItemsControl ItemsSource="{Binding BlockedSenders}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="m:BlockedSenderRecord">
+                  <Grid ColumnDefinitions="*,Auto" Margin="4,4">
+                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                    <Button Grid.Column="1" Content="{l:T 'Unblock'}"
+                            Command="{Binding $parent[UserControl].((vm:ContactsViewModel)DataContext).UnblockSenderCommand}" CommandParameter="{Binding}" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+          </ScrollViewer>
+          </Panel>
+        </DockPanel>
+
+        <!-- Discover segment -->
+        <DockPanel IsVisible="{Binding IsDiscoverSegment}">
+          <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="16,0,14,6">
+            <TextBlock Classes="hint" Text="{l:T 'Nodes heard via adverts that aren\'t saved on your radio.'}" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Classes="link" Content="{l:T 'Clear'}" Command="{Binding ClearDiscoveredCommand}" Margin="8,0,0,0" />
+          </Grid>
+          <ListBox Classes="plain" ItemsSource="{Binding Discovered}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:DiscoveredRow">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <ctl:Avatar Size="36" Emoji="{Binding Emoji}" IconKey="{Binding IconKey}" Color="{Binding Color}" Opacity="0.85" />
+                  <StackPanel Grid.Column="1" Margin="10,0,6,0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding Detail}" Classes="caption" TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Classes="icon" ToolTip.Tip="{l:T 'Show on map'}" IsVisible="{Binding Node.HasLocation}"
+                            Command="{Binding $parent[UserControl].((vm:ContactsViewModel)DataContext).ShowDiscoveredOnMapCommand}" CommandParameter="{Binding}">
+                      <PathIcon Classes="small" Data="{StaticResource Icon.MapMarkerOutline}" />
+                    </Button>
+                    <Button Classes="icon" ToolTip.Tip="{l:T 'Add to radio'}"
+                            Command="{Binding $parent[UserControl].((vm:ContactsViewModel)DataContext).AddDiscoveredCommand}" CommandParameter="{Binding}">
+                      <PathIcon Classes="small" Data="{StaticResource Icon.AccountPlus}" Foreground="{DynamicResource App.Accent}" />
+                    </Button>
+                    <Button Classes="icon" ToolTip.Tip="{l:T 'Remove from list'}"
+                            Command="{Binding $parent[UserControl].((vm:ContactsViewModel)DataContext).DeleteDiscoveredCommand}" CommandParameter="{Binding}">
+                      <PathIcon Classes="small" Data="{StaticResource Icon.Close}" />
+                    </Button>
+                  </StackPanel>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+
+      </DockPanel>
+    </Border>
+
+    <Panel Grid.Column="1">
+      <ContentControl Content="{Binding Detail}" />
+      <StackPanel IsVisible="{Binding Detail, Converter={x:Static ObjectConverters.IsNull}}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+        <PathIcon Classes="large" Data="{StaticResource Icon.AccountMultipleOutline}" Foreground="{DynamicResource App.TextTertiary}" HorizontalAlignment="Center" />
+        <TextBlock Classes="secondary" Text="{l:T 'Select a contact to see details.'}" HorizontalAlignment="Center" />
+      </StackPanel>
+    </Panel>
+  </Grid>
+</UserControl>

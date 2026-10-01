@@ -1,0 +1,497 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctl="using:MC1.Windows.Controls">
+
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{DynamicResource App.Background}" />
+  </Style>
+
+  <!-- Typography -->
+  <Style Selector="TextBlock.h1">
+    <Setter Property="FontSize" Value="24" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.h2">
+    <Setter Property="FontSize" Value="18" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.h3">
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.secondary">
+    <Setter Property="Foreground" Value="{DynamicResource App.TextSecondary}" />
+  </Style>
+  <Style Selector="TextBlock.tertiary">
+    <Setter Property="Foreground" Value="{DynamicResource App.TextTertiary}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.caption">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextSecondary}" />
+  </Style>
+  <Style Selector="TextBlock.section">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextSecondary}" />
+    <Setter Property="Margin" Value="4,16,0,6" />
+  </Style>
+  <Style Selector="TextBlock.mono">
+    <Setter Property="FontFamily" Value="{StaticResource App.MonoFont}" />
+  </Style>
+  <Style Selector="SelectableTextBlock.mono">
+    <Setter Property="FontFamily" Value="{StaticResource App.MonoFont}" />
+  </Style>
+  <Style Selector="TextBox.mono">
+    <Setter Property="FontFamily" Value="{StaticResource App.MonoFont}" />
+  </Style>
+
+  <!-- Cards -->
+  <Style Selector="Border.card">
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Padding" Value="16" />
+  </Style>
+  <Style Selector="Border.pane">
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+    <Setter Property="BorderThickness" Value="0,0,1,0" />
+  </Style>
+  <Style Selector="Border.chip">
+    <Setter Property="Background" Value="{DynamicResource App.Chip}" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Padding" Value="8,2" />
+  </Style>
+  <Style Selector="Border.badge">
+    <Setter Property="Background" Value="{DynamicResource App.Accent}" />
+    <Setter Property="CornerRadius" Value="9" />
+    <Setter Property="MinWidth" Value="18" />
+    <Setter Property="Height" Value="18" />
+    <Setter Property="Padding" Value="5,0" />
+  </Style>
+  <Style Selector="Border.badge > TextBlock">
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <!-- Unread emphasis in the chat list -->
+  <Style Selector="TextBlock.chattitle">
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.unread">
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style Selector="TextBlock.unreadpreview">
+    <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.unreadtime">
+    <Setter Property="Foreground" Value="{DynamicResource App.Accent}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+
+  <!-- Icons -->
+  <Style Selector="PathIcon">
+    <Setter Property="Width" Value="18" />
+    <Setter Property="Height" Value="18" />
+  </Style>
+  <Style Selector="PathIcon.small">
+    <Setter Property="Width" Value="14" />
+    <Setter Property="Height" Value="14" />
+  </Style>
+  <Style Selector="PathIcon.tiny">
+    <Setter Property="Width" Value="12" />
+    <Setter Property="Height" Value="12" />
+  </Style>
+  <!-- Welcome guide page dots -->
+  <Style Selector="Border.guidedot">
+    <Setter Property="Width" Value="8" />
+    <Setter Property="Background" Value="{DynamicResource App.Border}" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Width" Duration="0:0:0.2" />
+      </Transitions>
+    </Setter>
+  </Style>
+  <Style Selector="Border.guidedot.current">
+    <Setter Property="Width" Value="22" />
+    <Setter Property="Background" Value="{DynamicResource App.Accent}" />
+  </Style>
+  <!-- Cards shown over the window (welcome guide, radio set-up) -->
+  <Style Selector="Border.overlaycard">
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="CornerRadius" Value="16" />
+    <Setter Property="BoxShadow" Value="0 12 40 0 #55000000" />
+    <Setter Property="ClipToBounds" Value="True" />
+  </Style>
+  <!-- Filter bubbles (Chats and Contacts lists) -->
+  <Style Selector="ListBox.filterchips">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate><WrapPanel Orientation="Horizontal" /></ItemsPanelTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="ListBox.filterchips ListBoxItem">
+    <Setter Property="Padding" Value="10,3" />
+    <Setter Property="Margin" Value="2" />
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="MinHeight" Value="26" />
+    <Setter Property="Background" Value="{DynamicResource App.Chip}" />
+  </Style>
+  <Style Selector="ListBox.filterchips ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Accent}" />
+  </Style>
+  <Style Selector="ListBox.filterchips ListBoxItem:selected">
+    <Setter Property="Foreground" Value="White" />
+  </Style>
+  <!-- Language tiles (first page of the welcome guide) -->
+  <Style Selector="ListBox.langgrid">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+  </Style>
+  <Style Selector="ListBox.langgrid ListBoxItem">
+    <Setter Property="Padding" Value="12,7" />
+    <Setter Property="Margin" Value="3" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+    <Setter Property="Background" Value="{DynamicResource App.SurfaceAlt}" />
+  </Style>
+  <Style Selector="ListBox.langgrid ListBoxItem:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+  </Style>
+  <Style Selector="ListBox.langgrid ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Accent}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
+  </Style>
+  <Style Selector="ListBox.langgrid ListBoxItem:selected">
+    <Setter Property="Foreground" Value="White" />
+  </Style>
+  <Style Selector="ListBox.langgrid ListBoxItem:selected TextBlock.caption">
+    <Setter Property="Foreground" Value="#DDE8FF" />
+  </Style>
+  <!-- Chips in a message's footer (hops, heard, repeats): icon + number in a hairline capsule, like the iPhone app. -->
+  <Style Selector="PathIcon.chip">
+    <Setter Property="Width" Value="11" />
+    <Setter Property="Height" Value="11" />
+  </Style>
+  <Style Selector="Border.footchip">
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="5,0,6,0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Opacity" Value="0.85" />
+  </Style>
+  <Style Selector="PathIcon.large">
+    <Setter Property="Width" Value="28" />
+    <Setter Property="Height" Value="28" />
+  </Style>
+
+  <!-- Navigation rail -->
+  <Style Selector="ListBox.navrail">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="ListBox.navrail ListBoxItem">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Margin" Value="6,2" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Height" Value="56" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="ListBox.navrail ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Selection}" />
+  </Style>
+  <Style Selector="Border.rail">
+    <Setter Property="Width" Value="84" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Width" Duration="0:0:0.15" />
+      </Transitions>
+    </Setter>
+  </Style>
+  <Style Selector="Border.rail Image.raillogo">
+    <Setter Property="Width" Value="40" />
+    <Setter Property="Height" Value="40" />
+  </Style>
+  <Style Selector="Border.rail Border.navbadge">
+    <Setter Property="Margin" Value="0,4,6,0" />
+  </Style>
+  <Style Selector="Border.rail Ellipse.navalert">
+    <Setter Property="Margin" Value="0,8,12,0" />
+  </Style>
+  <Style Selector="Border.rail.collapsed">
+    <Setter Property="Width" Value="58" />
+  </Style>
+  <Style Selector="Border.rail.collapsed Image.raillogo">
+    <Setter Property="Width" Value="30" />
+    <Setter Property="Height" Value="30" />
+  </Style>
+  <Style Selector="Border.rail.collapsed TextBlock.navlabel">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="Border.rail.collapsed ListBox.navrail ListBoxItem">
+    <Setter Property="Height" Value="44" />
+    <Setter Property="Margin" Value="7,2" />
+  </Style>
+  <Style Selector="Border.rail.collapsed Border.navbadge">
+    <Setter Property="Margin" Value="0,0,0,0" />
+  </Style>
+  <Style Selector="Border.rail.collapsed Ellipse.navalert">
+    <Setter Property="Margin" Value="0,4,4,0" />
+  </Style>
+
+  <!-- Lists -->
+  <Style Selector="ListBox.plain">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="ListBox.plain ListBoxItem">
+    <Setter Property="Padding" Value="10,8" />
+    <Setter Property="Margin" Value="6,1" />
+    <Setter Property="CornerRadius" Value="8" />
+  </Style>
+  <Style Selector="ListBox.plain ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Selection}" />
+  </Style>
+  <Style Selector="ListBox.plain ListBoxItem:selected">
+    <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+  </Style>
+
+  <!-- Buttons -->
+  <Style Selector="Button.icon">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="6" />
+    <Setter Property="CornerRadius" Value="6" />
+  </Style>
+  <Style Selector="Button.icon:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+  </Style>
+  <Style Selector="Button.link">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource App.Accent}" />
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+  <Style Selector="Button.link:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Button.danger">
+    <Setter Property="Foreground" Value="{DynamicResource App.Danger}" />
+  </Style>
+  <Style Selector="Button.row">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="10,8" />
+    <Setter Property="CornerRadius" Value="8" />
+  </Style>
+  <Style Selector="Button.row:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+  </Style>
+  <Style Selector="ToggleButton.chip">
+    <Setter Property="CornerRadius" Value="14" />
+    <Setter Property="Padding" Value="12,4" />
+    <Setter Property="MinHeight" Value="28" />
+  </Style>
+  <Style Selector="Button.reaction">
+    <Setter Property="Background" Value="{DynamicResource App.Chip}" />
+    <Setter Property="CornerRadius" Value="11" />
+    <Setter Property="Padding" Value="6,1" />
+    <Setter Property="MinHeight" Value="22" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.emoji">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="Padding" Value="4" />
+    <Setter Property="Width" Value="38" />
+    <Setter Property="Height" Value="38" />
+    <Setter Property="CornerRadius" Value="6" />
+  </Style>
+
+  <!-- Chat bubbles -->
+  <Style Selector="Border.bubble">
+    <Setter Property="CornerRadius" Value="14" />
+    <Setter Property="Padding" Value="11,7" />
+    <Setter Property="MaxWidth" Value="560" />
+  </Style>
+  <Style Selector="Border.bubble.incoming">
+    <Setter Property="Background" Value="{DynamicResource App.BubbleIn}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.BubbleInBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="4,14,14,14" />
+  </Style>
+  <Style Selector="Border.bubble.outgoing">
+    <Setter Property="Background" Value="{DynamicResource App.BubbleOut}" />
+    <Setter Property="CornerRadius" Value="14,4,14,14" />
+  </Style>
+  <Style Selector="Border.bubble.mention">
+    <Setter Property="Background" Value="{DynamicResource App.Mention}" />
+  </Style>
+  <Style Selector="Border.bubble.outgoing TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource App.BubbleOutText}" />
+  </Style>
+  <Style Selector="Border.bubble.outgoing PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource App.BubbleOutText}" />
+  </Style>
+  <Style Selector="ctl|MessageText">
+    <Setter Property="LinkBrush" Value="{DynamicResource App.Accent}" />
+    <Setter Property="SelectionBrush" Value="#662463EB" />
+    <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+  </Style>
+  <Style Selector="ctl|MessageText.out">
+    <Setter Property="Foreground" Value="{DynamicResource App.BubbleOutText}" />
+    <Setter Property="LinkBrush" Value="{DynamicResource App.BubbleOutText}" />
+    <Setter Property="SelectionBrush" Value="#66FFFFFF" />
+  </Style>
+  <Style Selector="Border.bubble.failed">
+    <Setter Property="Opacity" Value="0.75" />
+  </Style>
+
+  <!-- Settings rows -->
+  <Style Selector="Border.group">
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Padding" Value="16,6" />
+  </Style>
+  <Style Selector="Grid.setting">
+    <Setter Property="MinHeight" Value="44" />
+    <Setter Property="Margin" Value="0,4" />
+  </Style>
+  <Style Selector="TextBlock.label">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+  <Style Selector="TextBlock.hint">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextSecondary}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+  <Style Selector="TextBlock.value">
+    <Setter Property="HorizontalAlignment" Value="Right" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="TextAlignment" Value="Right" />
+  </Style>
+  <Style Selector="TextBlock.pagetitle">
+    <Setter Property="FontSize" Value="22" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.error">
+    <Setter Property="Foreground" Value="{DynamicResource App.Danger}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+  <Style Selector="Border.banner">
+    <Setter Property="Background" Value="{DynamicResource App.Selection}" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Padding" Value="12,8" />
+  </Style>
+  <Style Selector="Border.avatar">
+    <Setter Property="Width" Value="40" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="CornerRadius" Value="20" />
+  </Style>
+  <Style Selector="Border.avatar TextBlock">
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.avatar PathIcon">
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Button.danger:pointerover /template/ ContentPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource App.Danger}" />
+  </Style>
+
+  <Style Selector="TextBox">
+    <Setter Property="CornerRadius" Value="8" />
+  </Style>
+  <Style Selector="TabControl.pages TabItem">
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="MinHeight" Value="36" />
+    <Setter Property="Padding" Value="12,0" />
+  </Style>
+  <Style Selector="Separator">
+    <Setter Property="Background" Value="{DynamicResource App.Border}" />
+    <Setter Property="Margin" Value="0,8" />
+  </Style>
+  <Style Selector="ScrollViewer">
+    <Setter Property="AllowAutoHide" Value="True" />
+  </Style>
+  <!-- Conversation: header, "New Messages" line, composer -->
+  <Style Selector="Grid.newdivider Border.newline">
+    <Setter Property="Background" Value="{DynamicResource App.Accent}" />
+    <Setter Property="Opacity" Value="0.55" />
+  </Style>
+  <Style Selector="Grid.newdivider Border.newlabel">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Grid.newdivider Border.newlabel TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource App.Accent}" />
+  </Style>
+  <Style Selector="TextBox.composer">
+    <Setter Property="CornerRadius" Value="20" />
+    <Setter Property="Padding" Value="14,9" />
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+  </Style>
+  <Style Selector="TextBox.composer:pointerover /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+  </Style>
+  <Style Selector="TextBox.composer:focus /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+  </Style>
+  <Style Selector="Button.composerplus">
+    <Setter Property="Width" Value="38" />
+    <Setter Property="Height" Value="38" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="CornerRadius" Value="19" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.composerplus PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource App.Accent}" />
+  </Style>
+  <Style Selector="Button.composerplus:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+  </Style>
+  <Style Selector="Button.sendbutton">
+    <Setter Property="Width" Value="40" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="CornerRadius" Value="20" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.plusicon">
+    <Setter Property="Width" Value="34" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="CornerRadius" Value="17" />
+    <Setter Property="Background" Value="{DynamicResource App.Selection}" />
+  </Style>
+  <Style Selector="Border.plusicon PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource App.Accent}" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+</Styles>

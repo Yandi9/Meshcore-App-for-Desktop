@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.ChannelInfoView"
+             x:DataType="vm:ChannelInfoViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="20,16" Spacing="6">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBox Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" />
+        <Button Grid.Column="1" Content="{l:T 'Rename'}" Margin="8,0,0,0" Command="{Binding RenameCommand}" />
+      </Grid>
+      <TextBlock Classes="caption" Text="{Binding Kind}" />
+      <TextBlock Classes="caption" Text="{Binding Slot, StringFormat={l:T 'Radio channel slot {0}'}}" />
+      <Border Background="White" CornerRadius="10" Padding="4" HorizontalAlignment="Center" Margin="0,10">
+        <Path Data="{Binding Qr}" Width="200" Height="200" Stretch="Uniform" Fill="Black" />
+      </Border>
+      <TextBlock Classes="hint" TextAlignment="Center" Text="{l:T 'Scan with a MeshCore app on a phone, or share the link.'}" />
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBox Text="{Binding ShareUri, Mode=OneWay}" IsReadOnly="True" Classes="mono" FontSize="11" />
+        <Button Grid.Column="1" Content="{l:T 'Copy link'}" Margin="8,0,0,0" Command="{Binding CopyLinkCommand}" />
+      </Grid>
+      <CheckBox Content="{l:T 'Show secret key'}" IsChecked="{Binding ShowSecret}" Margin="0,6,0,0" />
+      <SelectableTextBlock Text="{Binding SecretHex}" Classes="mono" FontSize="12" IsVisible="{Binding ShowSecret}" />
+
+      <TextBlock Classes="section" Text="{l:T 'NOTIFICATIONS'}" />
+      <ComboBox ItemsSource="{Binding Levels}" SelectedItem="{Binding NotificationLevel}" HorizontalAlignment="Stretch">
+        <ComboBox.ItemTemplate>
+          <DataTemplate><TextBlock Text="{Binding Converter={x:Static conv:EnumDisplayConverter.Instance}}" /></DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+
+      <TextBlock Classes="section" Text="{l:T 'FLOOD SCOPE (REGION)'}" />
+      <TextBlock Classes="hint" Text="{l:T 'Limit how far messages on this channel flood, using region transport codes (requires firmware support).'}" />
+      <ComboBox ItemsSource="{Binding ScopeModes}" SelectedIndex="{Binding ScopeMode}" HorizontalAlignment="Stretch" />
+      <AutoCompleteBox Text="{Binding ScopeRegion}" ItemsSource="{Binding Regions}" Watermark="{l:T 'Region name'}" FilterMode="StartsWith"
+                       IsVisible="{Binding ScopeMode, Converter={x:Static conv:EqualsConverter.Instance}, ConverterParameter=2}" />
+      <Button Content="{l:T 'Save scope'}" Command="{Binding SaveScopeCommand}" HorizontalAlignment="Left" />
+
+      <TextBlock Classes="section" Text="{l:T 'MANAGE'}" />
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Content="{l:T 'Clear messages…'}" Command="{Binding ClearHistoryCommand}" />
+        <Button Classes="danger" Content="{l:T 'Remove channel…'}" Command="{Binding RemoveCommand}" />
+      </StackPanel>
+      <TextBlock Text="{Binding Message}" Classes="secondary" TextWrapping="Wrap" IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

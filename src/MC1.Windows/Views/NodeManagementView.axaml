@@ -1,0 +1,307 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.NodeManagementView"
+             x:DataType="vm:NodeManagementViewModel">
+  <DockPanel>
+    <!-- Header -->
+    <Border DockPanel.Dock="Top" Background="{DynamicResource App.Surface}" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="20,14">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <ctl:Avatar Size="48" Emoji="{Binding Emoji}" IconKey="{Binding IconKey}" Color="{Binding Color}" />
+        <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center">
+          <TextBlock Text="{Binding Title}" Classes="h2" />
+          <TextBlock Text="{Binding TypeText}" Classes="caption" />
+          <TextBlock Text="{Binding RouteText}" Classes="caption" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="4">
+          <TextBlock Text="{Binding SessionText}" Classes="caption" TextWrapping="Wrap" MaxWidth="300" TextAlignment="Right" />
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="6">
+            <Button Classes="accent" Content="{l:T 'Sign in…'}" Command="{Binding LoginCommand}" IsVisible="{Binding !IsAdmin}" />
+            <Button Content="{l:T 'Sign out'}" Command="{Binding LogoutCommand}" IsVisible="{Binding IsLoggedIn}" />
+          </StackPanel>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Padding="20,6" IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+            Background="{DynamicResource App.Selection}">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <ProgressBar IsIndeterminate="True" Width="40" IsVisible="{Binding Busy}" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+      </StackPanel>
+    </Border>
+
+    <TabControl Classes="pages" Margin="12,4,12,0">
+      <!-- Status -->
+      <TabItem Header="{l:T 'Status'}">
+        <ScrollViewer>
+          <StackPanel Margin="6,10" Spacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Classes="accent" Content="{l:T 'Request status'}" Command="{Binding RequestStatusCommand}" IsEnabled="{Binding !Busy}" />
+              <Button Content="{l:T 'Owner info'}" Command="{Binding RequestOwnerInfoCommand}" IsEnabled="{Binding !Busy}" />
+              <CheckBox Content="{l:T 'Auto-refresh every minute'}" IsChecked="{Binding AutoRefresh}" Margin="8,0,0,0" />
+              <TextBlock Text="{Binding StatusUpdated}" Classes="caption" VerticalAlignment="Center" />
+            </StackPanel>
+            <Border Classes="group">
+              <StackPanel>
+                <TextBlock Classes="hint" Margin="0,10" Text="{l:T 'Press Request status to query the node over the mesh.'}" IsVisible="{Binding !StatusRows.Count}" />
+                <ItemsControl ItemsSource="{Binding StatusRows}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:DetailRow">
+                      <Grid ColumnDefinitions="220,*" MinHeight="32">
+                        <TextBlock Text="{Binding Label}" Classes="secondary" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding Value}" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+            <StackPanel IsVisible="{Binding OwnerInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Spacing="4">
+              <TextBlock Classes="section" Text="{l:T 'OWNER INFO'}" />
+              <Border Classes="group" Padding="16,10">
+                <StackPanel>
+                  <TextBlock Text="{Binding Firmware, StringFormat={l:T 'Firmware: {0}'}}" Classes="caption" />
+                  <SelectableTextBlock Text="{Binding OwnerInfo}" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- History -->
+      <TabItem Header="{l:T 'History'}">
+        <ScrollViewer>
+          <StackPanel Margin="6,10" Spacing="8">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <ComboBox ItemsSource="{Binding HistoryWindows}" SelectedIndex="{Binding HistoryWindow}" MinWidth="130" />
+              <TextBlock Grid.Column="1" Text="{Binding HistorySummary}" Classes="caption" VerticalAlignment="Center" Margin="10,0" />
+              <Button Grid.Column="2" Content="{l:T 'Export CSV…'}" Command="{Binding ExportHistoryCommand}" />
+            </Grid>
+            <TextBlock Classes="section" Text="{l:T 'BATTERY (V)'}" />
+            <Border Classes="card" Height="190" Padding="6">
+              <ctl:LineChart Series="{Binding BatterySeries}" YUnit="V" YFormat="0.00" Revision="{Binding Revision}" />
+            </Border>
+            <TextBlock Classes="section" Text="{l:T 'NOISE FLOOR &amp; RSSI (dBm)'}" />
+            <Border Classes="card" Height="190" Padding="6">
+              <ctl:LineChart Series="{Binding NoiseSeries}" YUnit="dBm" YFormat="0" Revision="{Binding Revision}" />
+            </Border>
+            <TextBlock Classes="section" Text="{l:T 'LAST SNR (dB)'}" />
+            <Border Classes="card" Height="190" Padding="6">
+              <ctl:LineChart Series="{Binding SnrSeries}" YUnit="dB" Revision="{Binding Revision}" />
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Telemetry -->
+      <TabItem Header="{l:T 'Telemetry'}">
+        <ScrollViewer>
+          <StackPanel Margin="6,10" Spacing="8">
+            <Button Classes="accent" Content="{l:T 'Request telemetry'}" Command="{Binding RequestTelemetryCommand}" IsEnabled="{Binding !Busy}" HorizontalAlignment="Left" />
+            <Border Classes="group">
+              <StackPanel>
+                <TextBlock Classes="hint" Margin="0,10" Text="{l:T 'Sensor readings (voltage, temperature, GPS…) reported by the node.'}" IsVisible="{Binding !TelemetryRows.Count}" />
+                <ItemsControl ItemsSource="{Binding TelemetryRows}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:DetailRow">
+                      <Grid ColumnDefinitions="240,*" MinHeight="32">
+                        <TextBlock Text="{Binding Label}" Classes="secondary" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding Value}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Neighbours -->
+      <TabItem Header="{l:T 'Neighbors'}">
+        <ScrollViewer>
+          <StackPanel Margin="6,10" Spacing="8">
+            <Button Classes="accent" Content="{l:T 'Request neighbors'}" Command="{Binding RequestNeighboursCommand}" IsEnabled="{Binding !Busy}" HorizontalAlignment="Left" />
+            <TextBlock Classes="hint" Text="{l:T 'Nodes this repeater has heard directly, with the SNR it measured.'}" />
+            <ItemsControl ItemsSource="{Binding Neighbours}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:NeighbourRow">
+                  <Border Classes="card" Padding="12,8" Margin="0,0,0,4">
+                    <Grid ColumnDefinitions="*,Auto,Auto">
+                      <StackPanel>
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding KeyText}" Classes="caption mono" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Text="{Binding HeardText}" Classes="caption" VerticalAlignment="Center" Margin="10,0" />
+                      <TextBlock Grid.Column="2" Text="{Binding SnrText}" FontWeight="SemiBold" VerticalAlignment="Center" MinWidth="70" TextAlignment="Right"
+                                 Foreground="{Binding Color, Converter={x:Static conv:HexBrushConverter.Instance}}" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Settings -->
+      <TabItem Header="{l:T 'Settings'}">
+        <ScrollViewer>
+          <StackPanel Margin="6,10" Spacing="6" MaxWidth="760" HorizontalAlignment="Left">
+            <TextBlock Classes="hint" Text="{l:T 'Read and change the node\'s configuration through its CLI. Requires admin sign-in.'}" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Classes="accent" Content="{l:T 'Load settings'}" Command="{Binding LoadSettingsCommand}" IsEnabled="{Binding !Busy}" />
+              <TextBlock Text="{Binding SettingsProgress}" Classes="caption" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel IsVisible="{Binding SettingsLoaded}" Spacing="6">
+              <TextBlock Text="{Binding NodeVersion, StringFormat={l:T 'Firmware: {0}'}}" Classes="caption" />
+              <TextBlock Text="{Binding NodeClock, StringFormat={l:T 'Node clock: {0}'}}" Classes="caption" />
+              <TextBlock Classes="section" Text="{l:T 'IDENTITY'}" />
+              <Border Classes="group">
+                <StackPanel>
+                  <Grid ColumnDefinitions="170,*,Auto" Classes="setting">
+                    <TextBlock Classes="label" Text="{l:T 'Name'}" />
+                    <TextBox Grid.Column="1" Text="{Binding SetName}" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyNameCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                  <Grid ColumnDefinitions="170,*,*,Auto" Classes="setting">
+                    <TextBlock Classes="label" Text="{l:T 'Location (lat, lon)'}" />
+                    <TextBox Grid.Column="1" Text="{Binding SetLat}" Margin="0,0,4,0" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="2" Text="{Binding SetLon}" Margin="4,0,0,0" VerticalAlignment="Center" />
+                    <Button Grid.Column="3" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyLocationCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                  <Grid ColumnDefinitions="170,*,Auto" Classes="setting">
+                    <TextBlock Classes="label" Text="{l:T 'Owner info'}" />
+                    <TextBox Grid.Column="1" Text="{Binding SetOwnerInfo}" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyOwnerInfoCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                </StackPanel>
+              </Border>
+              <TextBlock Classes="section" Text="{l:T 'RADIO'}" />
+              <Border Classes="group">
+                <StackPanel>
+                  <Grid ColumnDefinitions="170,*,*,*,*" Classes="setting">
+                    <TextBlock Classes="label" Text="{l:T 'Freq / BW / SF / CR'}" />
+                    <TextBox Grid.Column="1" Text="{Binding SetFrequency}" Watermark="MHz" Margin="0,0,4,0" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="2" Text="{Binding SetBandwidth}" Watermark="kHz" Margin="4,0" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="3" Text="{Binding SetSf}" Watermark="SF" Margin="4,0" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="4" Text="{Binding SetCr}" Watermark="CR" Margin="4,0,0,0" VerticalAlignment="Center" />
+                  </Grid>
+                  <StackPanel Orientation="Horizontal" Spacing="8" Margin="170,0,0,8">
+                    <Button Content="{l:T 'Use my radio\'s settings'}" Command="{Binding UseMyRadioSettingsCommand}" />
+                    <Button Content="{l:T 'Apply radio…'}" Command="{Binding ApplyRadioCommand}" />
+                  </StackPanel>
+                  <Grid ColumnDefinitions="170,*,Auto" Classes="setting">
+                    <TextBlock Classes="label" Text="{l:T 'TX power (dBm)'}" />
+                    <TextBox Grid.Column="1" Text="{Binding SetTx}" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyTxCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                  <Grid ColumnDefinitions="170,*,Auto" Classes="setting" IsVisible="{Binding IsRepeater}">
+                    <TextBlock Classes="label" Text="{l:T 'Repeat packets'}" />
+                    <ToggleSwitch Grid.Column="1" IsChecked="{Binding SetRepeat}" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyRepeatCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                </StackPanel>
+              </Border>
+              <TextBlock Classes="section" Text="{l:T 'ADVERTS &amp; ROUTING'}" />
+              <Border Classes="group">
+                <StackPanel>
+                  <Grid ColumnDefinitions="220,*,Auto" Classes="setting">
+                    <TextBlock Classes="label" Text="{l:T 'Zero-hop advert interval (min)'}" />
+                    <TextBox Grid.Column="1" Text="{Binding SetAdvertInterval}" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyAdvertIntervalCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                  <Grid ColumnDefinitions="220,*,Auto" Classes="setting">
+                    <TextBlock Classes="label" Text="{l:T 'Flood advert interval (hours)'}" />
+                    <TextBox Grid.Column="1" Text="{Binding SetFloodAdvertInterval}" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyFloodAdvertIntervalCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                  <Grid ColumnDefinitions="220,*,Auto" Classes="setting" IsVisible="{Binding IsRepeater}">
+                    <TextBlock Classes="label" Text="{l:T 'Max flood hops'}" />
+                    <TextBox Grid.Column="1" Text="{Binding SetFloodMax}" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyFloodMaxCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                </StackPanel>
+              </Border>
+              <StackPanel IsVisible="{Binding IsRoom}" Spacing="6">
+                <TextBlock Classes="section" Text="{l:T 'ROOM ACCESS'}" />
+                <Border Classes="group">
+                  <StackPanel>
+                    <Grid ColumnDefinitions="170,*,Auto" Classes="setting">
+                      <TextBlock Classes="label" Text="{l:T 'Guest password'}" />
+                      <TextBox Grid.Column="1" Text="{Binding SetGuestPassword}" VerticalAlignment="Center" />
+                      <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyGuestPasswordCommand}" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid ColumnDefinitions="170,*,Auto" Classes="setting">
+                      <TextBlock Classes="label" Text="{l:T 'Allow read-only guests'}" />
+                      <ToggleSwitch Grid.Column="1" IsChecked="{Binding SetAllowReadOnly}" VerticalAlignment="Center" />
+                      <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyAllowReadOnlyCommand}" VerticalAlignment="Center" />
+                    </Grid>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </StackPanel>
+            <TextBlock Classes="section" Text="{l:T 'ACTIONS'}" />
+            <WrapPanel>
+              <Button Content="{l:T 'Sync node clock'}" Command="{Binding SyncClockCommand}" Margin="0,0,8,8" />
+              <Button Content="{l:T 'Send advert'}" Command="{Binding SendAdvertCommand}" Margin="0,0,8,8" />
+              <Button Content="{l:T 'Change admin password…'}" Command="{Binding ChangePasswordCommand}" Margin="0,0,8,8" />
+              <Button Classes="danger" Content="{l:T 'Reboot…'}" Command="{Binding RebootCommand}" Margin="0,0,8,8" />
+            </WrapPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- ACL -->
+      <TabItem Header="{l:T 'Access list'}">
+        <ScrollViewer>
+          <StackPanel Margin="6,10" Spacing="8">
+            <Button Classes="accent" Content="{l:T 'Request access list'}" Command="{Binding RequestAclCommand}" IsEnabled="{Binding !Busy}" HorizontalAlignment="Left" />
+            <TextBlock Classes="hint" Text="{l:T 'Clients the node knows and their permission level (admin only).'}" />
+            <ItemsControl ItemsSource="{Binding Acl}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:AclRow">
+                  <Grid ColumnDefinitions="*,Auto" Margin="4,4">
+                    <StackPanel>
+                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                      <TextBlock Text="{Binding KeyText}" Classes="caption mono" />
+                    </StackPanel>
+                    <Border Grid.Column="1" Classes="chip" VerticalAlignment="Center"><TextBlock Text="{Binding Permission}" FontSize="12" /></Border>
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Console -->
+      <TabItem Header="{l:T 'Console'}">
+        <Grid RowDefinitions="*,Auto" Margin="6,10">
+          <Border Background="{DynamicResource App.CodeBackground}" CornerRadius="8" Padding="10">
+            <ScrollViewer x:Name="CliScroll">
+              <ItemsControl ItemsSource="{Binding CliLines}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:CliLine">
+                    <SelectableTextBlock Text="{Binding Text}" Classes="mono" FontSize="12.5" TextWrapping="Wrap"
+                                         Foreground="{Binding Color, Converter={x:Static conv:HexBrushConverter.Instance}}" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Border>
+          <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto" Margin="0,8,0,0">
+            <TextBox x:Name="CliBox" Text="{Binding CliInput}" Classes="mono" Watermark="{l:T 'Command, e.g. get radio'}" />
+            <Button Grid.Column="1" Classes="accent" Content="{l:T 'Send'}" Margin="8,0,0,0" Command="{Binding SendCliCommand}" />
+            <Button Grid.Column="2" Content="{l:T 'Open full terminal'}" Margin="8,0,0,0" Command="{Binding OpenFullCliCommand}" />
+          </Grid>
+        </Grid>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

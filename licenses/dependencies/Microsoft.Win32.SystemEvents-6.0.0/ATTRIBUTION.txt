@@ -1,0 +1,6 @@
+Microsoft.Win32.SystemEvents 6.0.0
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (expression): MIT
+Project: https://dot.net/
+Package: https://www.nuget.org/packages/Microsoft.Win32.SystemEvents/6.0.0

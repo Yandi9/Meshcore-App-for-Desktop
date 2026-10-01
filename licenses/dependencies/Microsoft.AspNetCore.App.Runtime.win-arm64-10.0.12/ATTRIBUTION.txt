@@ -1,0 +1,6 @@
+Microsoft.AspNetCore.App.Runtime.win-arm64 10.0.12
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (expression): MIT
+Project: https://asp.net/
+Package: https://www.nuget.org/packages/Microsoft.AspNetCore.App.Runtime.win-arm64/10.0.12

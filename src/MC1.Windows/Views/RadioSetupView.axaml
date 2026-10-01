@@ -1,0 +1,75 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:u="using:MC1.Core.Utilities"
+             x:Class="MC1.Windows.Views.RadioSetupView"
+             x:DataType="vm:RadioSetupViewModel">
+  <StackPanel Margin="28,24,28,22" Spacing="14">
+    <Grid ColumnDefinitions="Auto,*">
+      <Border Width="52" Height="52" CornerRadius="26" Background="{DynamicResource App.Accent}" VerticalAlignment="Top">
+        <PathIcon Width="26" Height="26" Foreground="White" Data="{StaticResource Icon.AccessPoint}" />
+      </Border>
+      <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+        <TextBlock Text="{l:T 'Set up your radio'}" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap" />
+        <TextBlock Text="{l:T 'Connected! A few settings so others can find and hear you.'}" Classes="secondary" TextWrapping="Wrap" />
+      </StackPanel>
+    </Grid>
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="{l:T 'Name'}" FontWeight="SemiBold" />
+      <TextBox Text="{Binding Name}" Watermark="{l:T 'e.g. your name or callsign'}" MaxLength="31" />
+      <TextBlock Text="{l:T 'Others see this name in their contacts.'}" Classes="caption" />
+    </StackPanel>
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="{l:T 'Radio preset'}" FontWeight="SemiBold" />
+      <ComboBox ItemsSource="{Binding Presets}" SelectedItem="{Binding SelectedPreset}" HorizontalAlignment="Stretch" PlaceholderText="{l:T 'Keep the radio\'s current settings'}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate x:DataType="u:RadioPreset">
+            <StackPanel>
+              <TextBlock Text="{Binding Name}" />
+              <TextBlock Text="{Binding Summary}" Classes="caption" />
+            </StackPanel>
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+      <TextBlock Text="{Binding RecommendedText}" Classes="caption" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding CurrentText}" Classes="caption" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <Border Classes="group">
+      <StackPanel>
+        <Grid ColumnDefinitions="*,Auto" Margin="14,10">
+          <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="{l:T 'Share my position'}" />
+            <TextBlock Text="{Binding LocationText}" Classes="caption" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+            <Button Content="{l:T 'Use this PC\'s location'}" Command="{Binding UsePcLocationCommand}" />
+            <ToggleSwitch IsChecked="{Binding SharePosition}" OnContent="" OffContent="" />
+          </StackPanel>
+        </Grid>
+        <Grid ColumnDefinitions="*,Auto" Margin="14,10">
+          <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="{l:T 'Announce my radio'}" />
+            <TextBlock Text="{l:T 'Sends an advert so nearby radios add you'}" Classes="caption" TextWrapping="Wrap" />
+          </StackPanel>
+          <ToggleSwitch Grid.Column="1" IsChecked="{Binding SendAdvert}" OnContent="" OffContent="" />
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Classes="secondary"
+               IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+    <Grid ColumnDefinitions="*,Auto">
+      <TextBlock Text="{l:T 'You can change all of this later on the Radio page.'}" Classes="caption" VerticalAlignment="Center" TextWrapping="Wrap" />
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+        <ProgressBar IsIndeterminate="True" Width="60" IsVisible="{Binding Busy}" VerticalAlignment="Center" />
+        <Button Content="{l:T 'Skip'}" Command="{Binding SkipCommand}" IsEnabled="{Binding !Busy}" />
+        <Button Classes="accent" Content="{l:T 'Apply to radio'}" Command="{Binding ApplyCommand}" IsEnabled="{Binding !Busy}" />
+      </StackPanel>
+    </Grid>
+  </StackPanel>
+</UserControl>

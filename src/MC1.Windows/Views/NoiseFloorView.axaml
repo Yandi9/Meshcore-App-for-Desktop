@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.NoiseFloorView"
+             x:DataType="vm:NoiseFloorViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="24,18" Spacing="10">
+      <TextBlock Classes="pagetitle" Text="{l:T 'Noise Floor'}" />
+      <TextBlock Classes="hint" Text="{l:T 'Polls your radio\'s receiver statistics. A lower (more negative) noise floor means a quieter channel and better range.'}" />
+      <WrapPanel>
+        <Button Classes="accent" Command="{Binding ToggleCommand}" Margin="0,0,8,6">
+          <Panel>
+            <TextBlock Text="{l:T 'Start monitoring'}" Foreground="White" IsVisible="{Binding !IsMonitoring}" />
+            <TextBlock Text="{l:T 'Stop'}" Foreground="White" IsVisible="{Binding IsMonitoring}" />
+          </Panel>
+        </Button>
+        <TextBlock Text="{l:T 'Sample every'}" VerticalAlignment="Center" Margin="4,0,6,6" />
+        <ComboBox ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalIndex}" Margin="0,0,8,6" />
+        <Button Content="{l:T 'Reset'}" Command="{Binding ResetCommand}" Margin="0,0,8,6" />
+      </WrapPanel>
+      <TextBlock Text="{Binding Status}" Classes="secondary" IsVisible="{Binding Status, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      <UniformGrid Columns="4">
+        <Border Classes="card" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock Classes="caption" Text="{l:T 'Noise floor'}" />
+            <TextBlock Classes="h1" Text="{Binding CurrentNoise}" />
+            <TextBlock Text="{Binding Quality}" FontWeight="SemiBold" Foreground="{Binding QualityColor, Converter={x:Static conv:HexBrushConverter.Instance}}" />
+          </StackPanel>
+        </Border>
+        <Border Classes="card" Margin="4,0">
+          <StackPanel>
+            <TextBlock Classes="caption" Text="{l:T 'Last packet RSSI'}" />
+            <TextBlock Classes="h1" Text="{Binding CurrentRssi}" />
+          </StackPanel>
+        </Border>
+        <Border Classes="card" Margin="4,0">
+          <StackPanel>
+            <TextBlock Classes="caption" Text="{l:T 'Last packet SNR'}" />
+            <TextBlock Classes="h1" Text="{Binding CurrentSnr}" />
+          </StackPanel>
+        </Border>
+        <Border Classes="card" Margin="8,0,0,0">
+          <StackPanel>
+            <TextBlock Classes="caption" Text="{l:T 'Monitoring'}" />
+            <TextBlock Classes="h1" Text="{l:T 'Live'}" IsVisible="{Binding IsMonitoring}" Foreground="{DynamicResource App.Success}" />
+            <TextBlock Classes="h1" Text="{l:T 'Stopped'}" IsVisible="{Binding !IsMonitoring}" Foreground="{DynamicResource App.TextTertiary}" />
+          </StackPanel>
+        </Border>
+      </UniformGrid>
+      <TextBlock Classes="section" Text="{l:T 'NOISE FLOOR &amp; RSSI (dBm)'}" />
+      <Border Classes="card" Height="260" Padding="6">
+        <ctl:LineChart Series="{Binding SignalSeries}" YUnit="dBm" YFormat="0" Revision="{Binding Revision}" EmptyText="{l:T 'Press Start monitoring to collect samples.'}" />
+      </Border>
+      <TextBlock Classes="section" Text="{l:T 'SNR (dB)'}" />
+      <Border Classes="card" Height="200" Padding="6">
+        <ctl:LineChart Series="{Binding SnrSeries}" YUnit="dB" Revision="{Binding Revision}" />
+      </Border>
+      <TextBlock Classes="caption" Text="{Binding Stats}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

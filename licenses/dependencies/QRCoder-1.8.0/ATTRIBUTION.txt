@@ -1,0 +1,6 @@
+QRCoder 1.8.0
+Authors: Raffael Herrmann, Shane Krueger
+Copyright: Copyright © 2013-2025 Raffael Herrmann. Copyright © 2024-2025 Shane Krueger. All rights reserved.
+License (expression): MIT
+Project: 
+Package: https://www.nuget.org/packages/QRCoder/1.8.0

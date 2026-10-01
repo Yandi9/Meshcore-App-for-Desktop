@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>MC1.Core</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.89" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../MeshCore/MeshCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="MC1.Core.Localization" />
+    <EmbeddedResource Include="Localization\Strings\*.json" LogicalName="MC1.Core.Strings.%(Filename).json" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="MC1.Core.Tests" />
+  </ItemGroup>
+</Project>

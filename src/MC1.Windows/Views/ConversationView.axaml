@@ -1,0 +1,437 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             xmlns:svc="using:MC1.Windows.Services"
+             x:Class="MC1.Windows.Views.ConversationView"
+             x:DataType="vm:ConversationViewModel">
+  <UserControl.Resources>
+    <!-- Emoji grid used for reactions (sends ReactCommand on the message) -->
+    <DataTemplate x:Key="EmojiGroupTemplate" x:DataType="svc:EmojiGroup">
+      <StackPanel Spacing="2">
+        <TextBlock Classes="caption" Text="{Binding Name}" Margin="4,6,0,2" />
+        <ItemsControl ItemsSource="{Binding Emoji}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate><WrapPanel Width="330" /></ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String">
+              <Button Classes="emoji" Content="{Binding}" Click="EmojiButton_OnClick" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <Panel>
+    <!-- Chat background: one surface behind the header, the messages and the composer, so the name bar blends in -->
+    <Border Background="{DynamicResource App.Background}" />
+    <Border Background="{Binding Appearance.Background}" />
+    <Image Source="{Binding Appearance.Image}" Stretch="UniformToFill" IsVisible="{Binding Appearance.HasImage}" />
+    <Border Background="{DynamicResource App.Background}" Opacity="{Binding Appearance.ImageDim}" IsVisible="{Binding Appearance.HasImage}" />
+
+  <DockPanel>
+    <!-- Header (transparent: sits on the chat background) -->
+    <Border DockPanel.Dock="Top" Classes="chathead" Background="Transparent" Padding="16,10,12,6">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <ctl:Avatar Size="40" Emoji="{Binding Emoji}" IconKey="{Binding AvatarIcon}" Text="{Binding AvatarText}" Color="{Binding AvatarColor}" />
+        <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center">
+          <TextBlock Text="{Binding Title}" Classes="h3 headtitle" TextTrimming="CharacterEllipsis" />
+          <TextBlock Text="{Binding Subtitle}" Classes="caption headsub" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+          <Button Classes="accent" Content="{l:T 'Sign in'}" Margin="0,0,6,0" IsVisible="{Binding IsRoom}" IsEnabled="{Binding !IsRoomSignedIn}"
+                  Command="{Binding SignInToRoomCommand}" />
+          <Button Classes="icon" ToolTip.Tip="{l:T 'Background &amp; colours'}" Command="{Binding CustomizeAppearanceCommand}">
+            <PathIcon Data="{StaticResource Icon.PaletteOutline}" />
+          </Button>
+          <Button Classes="icon" ToolTip.Tip="{l:T 'Details'}" Command="{Binding OpenInfoCommand}">
+            <PathIcon Data="{StaticResource Icon.InformationOutline}" />
+          </Button>
+          <Button Classes="icon" ToolTip.Tip="{l:T 'More'}">
+            <PathIcon Data="{StaticResource Icon.DotsVertical}" />
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="{l:T 'Conversation details'}" Command="{Binding OpenInfoCommand}" />
+                <MenuItem Header="{l:T 'Background &amp; colours…'}" Command="{Binding CustomizeAppearanceCommand}" />
+                <MenuItem Header="{l:T 'Clear history…'}" Command="{Binding ClearHistoryCommand}" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Banner -->
+    <Border DockPanel.Dock="Top" Classes="banner" Margin="16,4,16,0" IsVisible="{Binding Banner, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <PathIcon Classes="small" Data="{StaticResource Icon.InformationOutline}" Margin="0,0,8,0" />
+        <TextBlock Grid.Column="1" Text="{Binding Banner}" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="13" />
+        <Button Grid.Column="2" Classes="link" Content="{l:T 'Sign in'}" IsVisible="{Binding IsRoom}" Command="{Binding SignInToRoomCommand}" Margin="8,0,0,0" />
+      </Grid>
+    </Border>
+
+    <!-- Composer -->
+    <Border DockPanel.Dock="Bottom" Classes="composerbar" Background="Transparent" Padding="12,6,14,12">
+      <StackPanel Spacing="6">
+        <!-- Reply preview -->
+        <Border Classes="chip" CornerRadius="8" Padding="10,6" IsVisible="{Binding ReplyingTo, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <PathIcon Classes="small" Data="{StaticResource Icon.Reply}" Foreground="{DynamicResource App.Accent}" Margin="0,0,8,0" />
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="{Binding ReplyingTo.SenderDisplay, StringFormat={l:T 'Replying to {0}'}}" FontWeight="SemiBold" FontSize="12" />
+              <TextBlock Text="{Binding ReplyingTo.Body}" Classes="caption" TextTrimming="CharacterEllipsis" MaxLines="1" />
+            </StackPanel>
+            <Button Grid.Column="2" Classes="icon" Command="{Binding CancelReplyCommand}" ToolTip.Tip="{l:T 'Cancel reply'}">
+              <PathIcon Classes="small" Data="{StaticResource Icon.Close}" />
+            </Button>
+          </Grid>
+        </Border>
+        <!-- Mention suggestions -->
+        <Border Classes="card" Padding="4" IsVisible="{Binding ShowMentions}" MaxHeight="180">
+          <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding MentionSuggestions}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                  <Button Classes="row" Command="{Binding $parent[UserControl].((vm:ConversationViewModel)DataContext).InsertMentionCommand}" CommandParameter="{Binding}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <PathIcon Classes="small" Data="{StaticResource Icon.At}" />
+                      <TextBlock Text="{Binding}" />
+                    </StackPanel>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Border>
+        <Grid ColumnDefinitions="Auto,*,Auto">
+          <!-- "+" : emoji or a picture through MeshPic -->
+          <Button x:Name="PlusButton" Classes="composerplus" VerticalAlignment="Bottom" Margin="0,0,8,2" ToolTip.Tip="{l:T 'Emoji, picture, location or contact'}" IsEnabled="{Binding CanPost}">
+            <PathIcon Data="{StaticResource Icon.Plus}" />
+            <Button.Flyout>
+              <Flyout Placement="TopEdgeAlignedLeft" Opening="PlusFlyout_OnOpening">
+                <Panel>
+                  <StackPanel x:Name="PlusMenu" Spacing="2" Width="270">
+                    <Button Classes="row plusoption" Click="ShowEmojiPicker_OnClick">
+                      <Grid ColumnDefinitions="Auto,*">
+                        <Border Classes="plusicon"><PathIcon Data="{StaticResource Icon.EmoticonHappyOutline}" /></Border>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                          <TextBlock Text="{l:T 'Emoji'}" FontWeight="SemiBold" />
+                          <TextBlock Text="{l:T 'Insert an emoji'}" Classes="caption" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Grid>
+                    </Button>
+                    <Button Classes="row plusoption" Click="OpenMeshPic_OnClick">
+                      <Grid ColumnDefinitions="Auto,*">
+                        <Border Classes="plusicon"><PathIcon Data="{StaticResource Icon.ImageOutline}" /></Border>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                          <TextBlock Text="{l:T 'Picture'}" FontWeight="SemiBold" />
+                          <TextBlock Text="{l:T 'Upload one with MeshPic'}" Classes="caption" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Grid>
+                    </Button>
+                    <Separator Margin="4,2" />
+                    <Button Classes="row plusoption" x:Name="ShareLocationOption" Click="ShareLocation_OnClick">
+                      <Grid ColumnDefinitions="Auto,*">
+                        <Border Classes="plusicon"><PathIcon Data="{StaticResource Icon.CrosshairsGps}" /></Border>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                          <TextBlock Text="{l:T 'Share location'}" FontWeight="SemiBold" />
+                          <TextBlock Text="{l:T 'Where you are (PC or radio)'}" Classes="caption" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Grid>
+                    </Button>
+                    <Button Classes="row plusoption" Click="ShowContactPicker_OnClick">
+                      <Grid ColumnDefinitions="Auto,*">
+                        <Border Classes="plusicon"><PathIcon Data="{StaticResource Icon.AccountMultipleOutline}" /></Border>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                          <TextBlock Text="{l:T 'Share contact'}" FontWeight="SemiBold" />
+                          <TextBlock Text="{l:T 'Pick one of your contacts'}" Classes="caption" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Grid>
+                    </Button>
+                    <Button Classes="row plusoption" x:Name="ShareMyInfoOption" Click="ShareMyInfo_OnClick">
+                      <Grid ColumnDefinitions="Auto,*">
+                        <Border Classes="plusicon"><PathIcon Data="{StaticResource Icon.CardAccountDetailsOutline}" /></Border>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                          <TextBlock Text="{l:T 'Share my info'}" FontWeight="SemiBold" />
+                          <TextBlock Text="{l:T 'Your radio, so others can add you'}" Classes="caption" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Grid>
+                    </Button>
+                    <TextBlock x:Name="PlusStatus" Classes="caption" TextWrapping="Wrap" Margin="8,4" IsVisible="False" />
+                  </StackPanel>
+                  <DockPanel x:Name="ContactPanel" IsVisible="False" Width="330">
+                    <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" Margin="0,0,0,4">
+                      <Button Classes="icon" Click="BackToPlusMenu_OnClick" ToolTip.Tip="{l:T 'Back'}">
+                        <PathIcon Classes="small" Data="{StaticResource Icon.ArrowLeft}" />
+                      </Button>
+                      <TextBlock Grid.Column="1" Text="{l:T 'Share a contact'}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="6,0,0,0" />
+                    </Grid>
+                    <TextBox x:Name="ContactSearch" DockPanel.Dock="Top" Watermark="{l:T 'Search contacts'}" Margin="0,0,0,6" TextChanged="ContactSearch_OnTextChanged" />
+                    <TextBlock x:Name="ContactEmpty" DockPanel.Dock="Top" Text="{l:T 'No contacts yet.'}" Classes="caption" Margin="8" IsVisible="False" />
+                    <ScrollViewer MaxHeight="320">
+                      <ItemsControl x:Name="ContactList">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="vm:ShareContactItem">
+                            <Button Classes="row plusoption" Click="ShareContact_OnClick" ToolTip.Tip="{Binding Name}">
+                              <Grid ColumnDefinitions="Auto,*">
+                                <Border Width="32" Height="32" CornerRadius="16" Background="{Binding Color, Converter={x:Static conv:HexBrushConverter.Instance}}">
+                                  <TextBlock Text="{Binding Initials}" Foreground="White" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                  <TextBlock TextTrimming="CharacterEllipsis">
+                                    <Run Text="{Binding KeyPrefix}" FontFamily="{StaticResource App.MonoFont}" Foreground="{DynamicResource App.TextSecondary}" />
+                                    <Run Text="{Binding Name}" FontWeight="SemiBold" />
+                                  </TextBlock>
+                                  <TextBlock Text="{Binding Kind}" Classes="caption" />
+                                </StackPanel>
+                              </Grid>
+                            </Button>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </ScrollViewer>
+                  </DockPanel>
+                  <DockPanel x:Name="EmojiPanel" IsVisible="False" Width="352">
+                    <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" Margin="0,0,0,4">
+                      <Button Classes="icon" Click="BackToPlusMenu_OnClick" ToolTip.Tip="{l:T 'Back'}">
+                        <PathIcon Classes="small" Data="{StaticResource Icon.ArrowLeft}" />
+                      </Button>
+                      <TextBlock Grid.Column="1" Text="{l:T 'Emoji'}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="6,0,0,0" />
+                    </Grid>
+                    <ScrollViewer MaxHeight="320">
+                      <ItemsControl ItemsSource="{x:Static svc:EmojiCatalog.Groups}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="svc:EmojiGroup">
+                            <StackPanel Spacing="2">
+                              <TextBlock Classes="caption" Text="{Binding Name}" Margin="4,6,0,2" />
+                              <ItemsControl ItemsSource="{Binding Emoji}">
+                                <ItemsControl.ItemsPanel>
+                                  <ItemsPanelTemplate><WrapPanel Width="330" /></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                  <DataTemplate x:DataType="x:String">
+                                    <Button Classes="emoji" Content="{Binding}" Click="ComposerEmoji_OnClick" />
+                                  </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                              </ItemsControl>
+                            </StackPanel>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </ScrollViewer>
+                  </DockPanel>
+                </Panel>
+              </Flyout>
+            </Button.Flyout>
+          </Button>
+          <TextBox x:Name="Composer" Grid.Column="1" Classes="composer" Text="{Binding Draft}" AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="150" MinHeight="40"
+                   Watermark="{l:T 'Message'}" IsEnabled="{Binding CanPost}" VerticalContentAlignment="Center" />
+          <StackPanel Grid.Column="2" VerticalAlignment="Bottom" Margin="8,0,0,0" Spacing="2">
+            <TextBlock Text="{Binding ByteCounter}" Classes="tertiary" HorizontalAlignment="Center" Classes.error="{Binding OverLimit}" />
+            <Button Classes="accent sendbutton" Command="{Binding SendCommand}" IsEnabled="{Binding CanPost}" ToolTip.Tip="{l:T 'Send (Enter)'}">
+              <PathIcon Data="{StaticResource Icon.Send}" Foreground="White" />
+            </Button>
+          </StackPanel>
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <!-- Messages -->
+    <Panel>
+      <ScrollViewer x:Name="Scroller" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,6,0,12">
+          <Button Classes="link" HorizontalAlignment="Center" Margin="0,8" Content="{l:T 'Load earlier messages'}" IsVisible="{Binding CanLoadOlder}" Command="{Binding LoadOlderCommand}" />
+          <ItemsControl x:Name="MessageList" ItemsSource="{Binding Messages}" Margin="16,0">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:MessageItemViewModel">
+                <StackPanel Margin="0,1">
+                  <!-- Day header -->
+                  <Border Classes="chip" HorizontalAlignment="Center" Margin="0,12,0,8" IsVisible="{Binding HasDayHeader}">
+                    <TextBlock Text="{Binding DayHeader}" Classes="caption" FontWeight="SemiBold" />
+                  </Border>
+                  <!-- "New Messages" line above the first message not yet seen -->
+                  <Grid Classes="newdivider" ColumnDefinitions="*,Auto,*" Margin="4,10,4,8" IsVisible="{Binding ShowNewDivider}">
+                    <Border Classes="newline" Height="1" VerticalAlignment="Center" />
+                    <Border Grid.Column="1" Classes="newlabel" Margin="10,0" Padding="8,2" CornerRadius="9">
+                      <TextBlock Text="{l:T 'New Messages'}" FontSize="11" FontWeight="Bold" />
+                    </Border>
+                    <Border Grid.Column="2" Classes="newline" Height="1" VerticalAlignment="Center" />
+                  </Grid>
+                  <Grid x:Name="Row" Background="Transparent" ColumnDefinitions="*,Auto" HorizontalAlignment="{Binding IsOutgoing, Converter={x:Static conv:AlignConverter.Instance}}">
+                    <Grid.ContextMenu>
+                      <ContextMenu Opened="MessageMenu_OnOpened">
+                        <MenuItem Header="{l:T 'Reply'}" Command="{Binding Conversation.ReplyCommand}" CommandParameter="{Binding}" IsEnabled="{Binding Conversation.CanPost}">
+                          <MenuItem.Icon><PathIcon Classes="small" Data="{StaticResource Icon.Reply}" /></MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="{l:T 'React'}" Tag="react" IsVisible="{Binding RoomRecord, Converter={x:Static ObjectConverters.IsNull}}">
+                          <MenuItem.Icon><PathIcon Classes="small" Data="{StaticResource Icon.EmoticonOutline}" /></MenuItem.Icon>
+                          <MenuItem Header="👍" />
+                        </MenuItem>
+                        <MenuItem Header="{l:T 'Copy text'}" Command="{Binding Conversation.CopyCommand}" CommandParameter="{Binding}">
+                          <MenuItem.Icon><PathIcon Classes="small" Data="{StaticResource Icon.ContentCopy}" /></MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="{l:T 'Mention sender'}" Command="{Binding Conversation.MentionSenderCommand}" CommandParameter="{Binding}" IsVisible="{Binding CanShowSender}" />
+                        <MenuItem Header="{l:T 'Send again'}" Command="{Binding Conversation.ResendCommand}" CommandParameter="{Binding}" IsVisible="{Binding CanResend}">
+                          <MenuItem.Icon><PathIcon Classes="small" Data="{StaticResource Icon.Refresh}" /></MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="{l:T 'Details (path, repeats, SNR)'}" Command="{Binding Conversation.ShowDetailsCommand}" CommandParameter="{Binding}">
+                          <MenuItem.Icon><PathIcon Classes="small" Data="{StaticResource Icon.InformationOutline}" /></MenuItem.Icon>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem Header="{l:T 'Block sender'}" Command="{Binding Conversation.BlockSenderCommand}" CommandParameter="{Binding}" IsVisible="{Binding IsChannelIncoming}">
+                          <MenuItem.Icon><PathIcon Classes="small" Data="{StaticResource Icon.Cancel}" /></MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="{l:T 'Delete'}" Command="{Binding Conversation.DeleteCommand}" CommandParameter="{Binding}">
+                          <MenuItem.Icon><PathIcon Classes="small" Data="{StaticResource Icon.DeleteOutline}" /></MenuItem.Icon>
+                        </MenuItem>
+                      </ContextMenu>
+                    </Grid.ContextMenu>
+
+                    <StackPanel Spacing="2" HorizontalAlignment="{Binding IsOutgoing, Converter={x:Static conv:AlignConverter.Instance}}">
+                      <TextBlock Classes="sender" Text="{Binding SenderDisplay}" FontSize="12" FontWeight="SemiBold" Margin="10,6,0,0" HorizontalAlignment="Left"
+                                 Foreground="{Binding SenderColor, Converter={x:Static conv:HexBrushConverter.Instance}}">
+                        <TextBlock.IsVisible>
+                          <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="ShowSender" />
+                            <Binding Path="CanShowSender" />
+                          </MultiBinding>
+                        </TextBlock.IsVisible>
+                      </TextBlock>
+                      <Border Classes="bubble" Classes.incoming="{Binding !IsOutgoing}" Classes.outgoing="{Binding IsOutgoing}"
+                              Classes.mention="{Binding IsMention}" Classes.failed="{Binding IsFailed}"
+                              HorizontalAlignment="{Binding IsOutgoing, Converter={x:Static conv:AlignConverter.Instance}}">
+                        <StackPanel Spacing="4">
+                          <!-- Quote -->
+                          <Border IsVisible="{Binding HasQuote}" BorderThickness="3,0,0,0" BorderBrush="{Binding SenderColor, Converter={x:Static conv:HexBrushConverter.Instance}}"
+                                  Background="#14000000" CornerRadius="4" Padding="8,4">
+                            <StackPanel>
+                              <TextBlock Text="{Binding QuoteName}" FontWeight="SemiBold" FontSize="12" />
+                              <TextBlock Text="{Binding QuoteText}" FontSize="12" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap" Opacity="0.85" />
+                            </StackPanel>
+                          </Border>
+                          <ctl:MessageText Tokens="{Binding Tokens}" LinkCommand="{Binding Conversation.OpenLinkCommand}" FontSize="14"
+                                           Classes.out="{Binding IsOutgoing}" />
+                          <!-- Inline image -->
+                          <Image Source="{Binding InlineImage}" MaxWidth="360" MaxHeight="320" Stretch="Uniform" HorizontalAlignment="Left"
+                                 IsVisible="{Binding InlineImage, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                          <!-- Link preview -->
+                          <Border IsVisible="{Binding HasLinkPreview}" CornerRadius="8" Background="#14000000" Padding="0" ClipToBounds="True" MaxWidth="360"
+                                  HorizontalAlignment="Left" Cursor="Hand" PointerPressed="LinkPreview_OnPointerPressed">
+                            <StackPanel>
+                              <Image Source="{Binding LinkImage}" MaxHeight="180" Stretch="UniformToFill" IsVisible="{Binding LinkImage, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                              <StackPanel Margin="10,6">
+                                <TextBlock Text="{Binding LinkTitle}" FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding LinkHost}" FontSize="11" Opacity="0.75" />
+                              </StackPanel>
+                            </StackPanel>
+                          </Border>
+                          <!-- Map preview -->
+                          <Border IsVisible="{Binding HasMap}" CornerRadius="8" ClipToBounds="True" Width="280" Height="150" HorizontalAlignment="Left"
+                                  Cursor="Hand" PointerPressed="MapPreview_OnPointerPressed">
+                            <ctl:MapControl IsInteractive="False" ShowAttribution="False" Zoom="13" CenterLatitude="{Binding MapLat, Mode=OneWay}"
+                                            CenterLongitude="{Binding MapLon, Mode=OneWay}" Markers="{Binding MapMarkers}" />
+                          </Border>
+                          <!-- Footer -->
+                          <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right" Opacity="0.72">
+                            <TextBlock Text="{Binding MetaText}" FontSize="11" IsVisible="{Binding HasMeta}" VerticalAlignment="Center" />
+                            <Border Classes="footchip" IsVisible="{Binding HasHopChip}" ToolTip.Tip="{Binding HopTip}" BorderBrush="{Binding #HopCount.Foreground}">
+                              <StackPanel Orientation="Horizontal" Spacing="2">
+                                <PathIcon Classes="chip" Data="{StaticResource Icon.Hop}" />
+                                <TextBlock x:Name="HopCount" Text="{Binding HopCount}" FontSize="11" />
+                              </StackPanel>
+                            </Border>
+                            <Border Classes="footchip" IsVisible="{Binding HasHeardChip}" ToolTip.Tip="{Binding HeardTip}" BorderBrush="{Binding #HeardCount.Foreground}">
+                              <StackPanel Orientation="Horizontal" Spacing="2">
+                                <PathIcon Classes="chip" Data="{StaticResource Icon.Ear}" />
+                                <TextBlock x:Name="HeardCount" Text="{Binding HeardCount}" FontSize="11" />
+                              </StackPanel>
+                            </Border>
+                            <Border Classes="footchip" IsVisible="{Binding HasRepeatChip}" ToolTip.Tip="{Binding RepeatTip}" BorderBrush="{Binding #RepeatCount.Foreground}">
+                              <StackPanel Orientation="Horizontal" Spacing="2">
+                                <PathIcon Classes="chip" Data="{StaticResource Icon.Repeat}" />
+                                <TextBlock x:Name="RepeatCount" Text="{Binding RepeatCount}" FontSize="11" />
+                              </StackPanel>
+                            </Border>
+                            <TextBlock Text="{Binding TimeText}" FontSize="11" />
+                            <PathIcon Classes="tiny" Data="{Binding StatusIcon, Converter={x:Static conv:IconConverter.Instance}}" IsVisible="{Binding IsOutgoing}"
+                                      ToolTip.Tip="{Binding StatusText}" />
+                          </StackPanel>
+                        </StackPanel>
+                      </Border>
+                      <!-- Reactions -->
+                      <ItemsControl ItemsSource="{Binding Reactions}" IsVisible="{Binding HasReactions}" Margin="6,0"
+                                    HorizontalAlignment="{Binding IsOutgoing, Converter={x:Static conv:AlignConverter.Instance}}">
+                        <ItemsControl.ItemsPanel>
+                          <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="vm:ReactionChip">
+                            <Button Classes="reaction" Content="{Binding Text}" Margin="0,0,4,0"
+                                    Command="{Binding $parent[ItemsControl].((vm:MessageItemViewModel)DataContext).ReactCommand}" CommandParameter="{Binding Emoji}" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                      <!-- Delivery status -->
+                      <Border Classes="underpill" HorizontalAlignment="Right" Margin="0,0,6,2" CornerRadius="8" IsVisible="{Binding IsOutgoing}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                          <TextBlock Text="{Binding StatusText}" Classes="tertiary" Classes.error="{Binding IsFailed}" />
+                          <Button Classes="link" Content="{l:T 'Retry'}" FontSize="12" IsVisible="{Binding IsFailed}"
+                                  Command="{Binding Conversation.ResendCommand}" CommandParameter="{Binding}" />
+                        </StackPanel>
+                      </Border>
+                    </StackPanel>
+
+                    <!-- Hover actions -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0" Spacing="0"
+                                IsVisible="{Binding #Row.IsPointerOver}">
+                      <Button Classes="icon" ToolTip.Tip="{l:T 'React'}" IsVisible="{Binding RoomRecord, Converter={x:Static ObjectConverters.IsNull}}">
+                        <PathIcon Classes="small" Data="{StaticResource Icon.EmoticonOutline}" />
+                        <Button.Flyout>
+                          <Flyout Placement="Top">
+                            <StackPanel Spacing="4">
+                              <ItemsControl ItemsSource="{Binding Conversation.QuickEmoji}">
+                                <ItemsControl.ItemsPanel>
+                                  <ItemsPanelTemplate><StackPanel Orientation="Horizontal" /></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                  <DataTemplate x:DataType="x:String">
+                                    <Button Classes="emoji" Content="{Binding}" Click="ReactEmoji_OnClick" />
+                                  </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                              </ItemsControl>
+                              <Expander Header="{l:T 'More'}">
+                                <ScrollViewer MaxHeight="240" Width="350">
+                                  <ItemsControl ItemsSource="{x:Static svc:EmojiCatalog.Groups}" ItemTemplate="{StaticResource EmojiGroupTemplate}" />
+                                </ScrollViewer>
+                              </Expander>
+                            </StackPanel>
+                          </Flyout>
+                        </Button.Flyout>
+                      </Button>
+                      <Button Classes="icon" ToolTip.Tip="{l:T 'Reply'}" Command="{Binding Conversation.ReplyCommand}" CommandParameter="{Binding}">
+                        <PathIcon Classes="small" Data="{StaticResource Icon.Reply}" />
+                      </Button>
+                    </StackPanel>
+                  </Grid>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ScrollViewer>
+      <StackPanel Classes="emptystate" IsVisible="{Binding IsEmpty}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="6">
+        <PathIcon Classes="large" Data="{StaticResource Icon.MessageTextOutline}" Foreground="{DynamicResource App.TextTertiary}" HorizontalAlignment="Center" />
+        <TextBlock Classes="secondary" Text="{l:T 'No messages yet. Say hello!'}" HorizontalAlignment="Center" />
+      </StackPanel>
+      <Button x:Name="JumpButton" Classes="accent" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,24,12" CornerRadius="18" Width="36" Height="36"
+              Padding="0" IsVisible="False" Click="JumpButton_OnClick" ToolTip.Tip="{l:T 'Jump to latest'}">
+        <PathIcon Data="{StaticResource Icon.ChevronDoubleDown}" Foreground="White" />
+      </Button>
+    </Panel>
+  </DockPanel>
+  </Panel>
+</UserControl>

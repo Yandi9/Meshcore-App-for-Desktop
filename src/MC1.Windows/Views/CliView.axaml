@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.CliView"
+             x:DataType="vm:CliViewModel">
+  <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="24,18,24,16">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel>
+        <TextBlock Classes="pagetitle" Text="{l:T 'CLI Terminal'}" />
+        <TextBlock Classes="hint" Text="{l:T 'Run commands on your radio, or on a repeater/room you are signed in to as admin. ↑/↓ history · Tab completes.'}" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="{l:T 'Clear'}" Command="{Binding ClearOutputCommand}" VerticalAlignment="Center" />
+    </Grid>
+    <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" Margin="0,10,0,8">
+      <ComboBox ItemsSource="{Binding Targets}" SelectedItem="{Binding Target}" MinWidth="280" />
+      <TextBlock Grid.Column="1" Text="{Binding SessionStatus}" Classes="caption" VerticalAlignment="Center" Margin="10,0" TextWrapping="Wrap" />
+      <Button Grid.Column="2" Content="{l:T 'Sign in…'}" IsVisible="{Binding NeedsLogin}" Command="{Binding LoginCommand}" />
+    </Grid>
+    <Border Grid.Row="2" Background="{DynamicResource App.CodeBackground}" CornerRadius="10" Padding="12,10">
+      <ScrollViewer x:Name="OutputScroll">
+        <ItemsControl ItemsSource="{Binding Lines}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:CliLine">
+              <SelectableTextBlock Text="{Binding Text}" Classes="mono" FontSize="13" TextWrapping="Wrap"
+                                   Foreground="{Binding Color, Converter={x:Static conv:HexBrushConverter.Instance}}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Border>
+    <StackPanel Grid.Row="3" Spacing="6" Margin="0,8,0,0">
+      <ItemsControl ItemsSource="{Binding Suggestions}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="x:String">
+            <Button Classes="reaction" Content="{Binding}" Margin="0,0,4,4" FontFamily="{StaticResource App.MonoFont}"
+                    Command="{Binding $parent[UserControl].((vm:CliViewModel)DataContext).UseSuggestionCommand}" CommandParameter="{Binding}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <TextBlock Text="{Binding Prompt}" Classes="mono" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" />
+        <TextBox x:Name="InputBox" Grid.Column="1" Text="{Binding Input}" Classes="mono" Watermark="{l:T 'Type a command (help)'}" />
+        <Button Grid.Column="2" Classes="accent" Margin="8,0,0,0" Command="{Binding SubmitCommand}" IsEnabled="{Binding !IsBusy}">
+          <Panel>
+            <TextBlock Text="{l:T 'Run'}" Foreground="White" IsVisible="{Binding !IsBusy}" />
+            <TextBlock Text="…" Foreground="White" IsVisible="{Binding IsBusy}" />
+          </Panel>
+        </Button>
+      </Grid>
+    </StackPanel>
+  </Grid>
+</UserControl>

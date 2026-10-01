@@ -1,0 +1,6 @@
+MicroCom.Runtime 0.11.0
+Authors: MicroCom.Runtime
+Copyright: Copyright 2021 © Nikita Tsukanov
+License (expression): MIT
+Project: 
+Package: https://www.nuget.org/packages/MicroCom.Runtime/0.11.0

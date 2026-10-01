@@ -1,0 +1,162 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:svc="using:MC1.Windows.Services"
+             x:Class="MC1.Windows.Views.ChatAppearanceView"
+             x:DataType="vm:ChatAppearanceViewModel">
+  <UserControl.Styles>
+    <Style Selector="ColorPicker">
+      <Setter Property="MinWidth" Value="110" />
+    </Style>
+  </UserControl.Styles>
+  <Grid RowDefinitions="*,Auto" ColumnDefinitions="*,300">
+    <!-- Settings -->
+    <ScrollViewer Grid.Row="0" Grid.Column="0">
+      <StackPanel Margin="20,16,14,10" Spacing="6">
+        <TextBlock Text="{Binding Title}" Classes="h2" />
+        <Border Classes="banner" IsVisible="{Binding ThemesDisabled}">
+          <TextBlock TextWrapping="Wrap" Text="{l:T 'Custom chat looks are switched off in Settings → Chat appearance. You can still edit them here; they show once it\'s switched back on.'}" />
+        </Border>
+        <Border Classes="banner" IsVisible="{Binding FollowsDefault}">
+          <TextBlock TextWrapping="Wrap" Text="{l:T 'This chat currently uses the default look for all chats. Saving here gives it its own look.'}" />
+        </Border>
+        <TextBlock Classes="hint" IsVisible="{Binding IsDefault}" Text="{l:T 'This look is used by every chat that doesn\'t have its own.'}" />
+
+        <TextBlock Classes="section" Text="{l:T 'PRESETS'}" />
+        <ItemsControl ItemsSource="{Binding Presets}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="svc:ChatThemePreset">
+              <Button Classes="row" Padding="4" Margin="0,0,6,6" Width="96" HorizontalContentAlignment="Center"
+                      Command="{Binding $parent[UserControl].((vm:ChatAppearanceViewModel)DataContext).ApplyPresetCommand}" CommandParameter="{Binding}">
+                <StackPanel Spacing="4">
+                  <Border Width="84" Height="52" CornerRadius="8" ClipToBounds="True" Background="{Binding Appearance.Background}"
+                          BorderBrush="{DynamicResource App.Border}" BorderThickness="1">
+                    <StackPanel Margin="6,6" Spacing="4">
+                      <Border Background="{Binding Appearance.PreviewIncomingBubble}" CornerRadius="5" Width="42" Height="12" HorizontalAlignment="Left" />
+                      <Border Background="{Binding Appearance.PreviewOutgoingBubble}" CornerRadius="5" Width="42" Height="12" HorizontalAlignment="Right" />
+                    </StackPanel>
+                  </Border>
+                  <TextBlock Text="{Binding DisplayName}" FontSize="12" HorizontalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBlock Classes="section" Text="{l:T 'BACKGROUND'}" />
+        <Border Classes="group">
+          <StackPanel>
+            <Grid ColumnDefinitions="160,*" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Type'}" />
+              <ComboBox Grid.Column="1" ItemsSource="{Binding BackgroundKinds}" SelectedIndex="{Binding BackgroundKindIndex}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="160,*" Classes="setting" IsVisible="{Binding UsesColor1}">
+              <TextBlock Classes="label" Text="{l:T 'Colour'}" />
+              <ColorPicker Grid.Column="1" Color="{Binding Color1}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="160,*" Classes="setting" IsVisible="{Binding IsGradient}">
+              <TextBlock Classes="label" Text="{l:T 'Second colour'}" />
+              <ColorPicker Grid.Column="1" Color="{Binding Color2}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="160,*" Classes="setting" IsVisible="{Binding IsGradient}">
+              <TextBlock Classes="label" Text="{l:T 'Direction'}" />
+              <ComboBox Grid.Column="1" ItemsSource="{Binding GradientDirections}" SelectedIndex="{Binding GradientDirectionIndex}" MinWidth="180" VerticalAlignment="Center" />
+            </Grid>
+            <StackPanel IsVisible="{Binding IsImage}" Margin="0,6,0,8" Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="{l:T 'Choose picture…'}" Command="{Binding ChooseImageCommand}" />
+                <Button Content="{l:T 'Remove'}" Command="{Binding RemoveImageCommand}" IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}" />
+              </StackPanel>
+              <Border CornerRadius="8" ClipToBounds="True" Width="220" Height="120" HorizontalAlignment="Left" Background="{DynamicResource App.Chip}"
+                      IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <Image Source="{Binding ImagePreview}" Stretch="UniformToFill" />
+              </Border>
+              <Grid ColumnDefinitions="160,*,50">
+                <TextBlock Classes="label" Text="{l:T 'Fade picture'}" ToolTip.Tip="{l:T 'Blends the picture with the app background so messages stay readable'}" />
+                <Slider Grid.Column="1" Minimum="0" Maximum="0.9" Value="{Binding ImageDim}" SmallChange="0.05" LargeChange="0.1" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="{Binding ImageDim, StringFormat='{}{0:P0}'}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+              </Grid>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <TextBlock Classes="section" Text="{l:T 'MESSAGE COLOURS'}" />
+        <Border Classes="group">
+          <StackPanel>
+            <Grid ColumnDefinitions="160,Auto,*" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Received bubble'}" />
+              <CheckBox Grid.Column="1" Content="{l:T 'Custom'}" IsChecked="{Binding CustomIncomingBubble}" Margin="0,0,10,0" />
+              <ColorPicker Grid.Column="2" Color="{Binding IncomingBubbleColor}" IsEnabled="{Binding CustomIncomingBubble}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="160,Auto,*,Auto" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Received text'}" />
+              <CheckBox Grid.Column="1" Content="{l:T 'Custom'}" IsChecked="{Binding CustomIncomingText}" Margin="0,0,10,0" />
+              <ColorPicker Grid.Column="2" Color="{Binding IncomingTextColor}" IsEnabled="{Binding CustomIncomingText}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+              <Button Grid.Column="3" Classes="link" Content="{l:T 'Swap'}" Command="{Binding SwapIncomingCommand}" ToolTip.Tip="{l:T 'Swap bubble and text colours'}" />
+            </Grid>
+            <Grid ColumnDefinitions="160,Auto,*" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Your bubble'}" />
+              <CheckBox Grid.Column="1" Content="{l:T 'Custom'}" IsChecked="{Binding CustomOutgoingBubble}" Margin="0,0,10,0" />
+              <ColorPicker Grid.Column="2" Color="{Binding OutgoingBubbleColor}" IsEnabled="{Binding CustomOutgoingBubble}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="160,Auto,*,Auto" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Your text'}" />
+              <CheckBox Grid.Column="1" Content="{l:T 'Custom'}" IsChecked="{Binding CustomOutgoingText}" Margin="0,0,10,0" />
+              <ColorPicker Grid.Column="2" Color="{Binding OutgoingTextColor}" IsEnabled="{Binding CustomOutgoingText}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+              <Button Grid.Column="3" Classes="link" Content="{l:T 'Swap'}" Command="{Binding SwapOutgoingCommand}" ToolTip.Tip="{l:T 'Swap bubble and text colours'}" />
+            </Grid>
+          </StackPanel>
+        </Border>
+        <TextBlock Text="{Binding ContrastWarning}" Foreground="{DynamicResource App.Warning}" TextWrapping="Wrap"
+                   IsVisible="{Binding ContrastWarning, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock Text="{Binding Error}" Classes="error" IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- Live preview -->
+    <StackPanel Grid.Row="0" Grid.Column="1" Margin="6,16,20,10" Spacing="6">
+      <TextBlock Classes="section" Text="{l:T 'PREVIEW'}" Margin="4,0,0,2" />
+      <Border CornerRadius="12" ClipToBounds="True" Height="380" BorderBrush="{DynamicResource App.Border}" BorderThickness="1">
+        <Panel>
+          <Border Background="{Binding PreviewBackground}" />
+          <Image Source="{Binding PreviewImage}" Stretch="UniformToFill" />
+          <Border Background="{DynamicResource App.Background}" Opacity="{Binding PreviewDim}" IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          <StackPanel Margin="12" Spacing="8">
+            <Border Classes="chip" HorizontalAlignment="Center"><TextBlock Text="{l:T 'Today'}" FontSize="11" /></Border>
+            <TextBlock Text="Alice" FontSize="11" FontWeight="SemiBold" Foreground="#F59E0B" Margin="4,4,0,-4" />
+            <Border Background="{Binding PreviewIncomingBubble}" CornerRadius="4,14,14,14" Padding="10,6" HorizontalAlignment="Left" MaxWidth="210">
+              <StackPanel>
+                <TextBlock Text="{l:T 'Hi! Anyone hearing the new repeater? 📡'}" TextWrapping="Wrap" Foreground="{Binding PreviewIncomingText}" FontSize="13" />
+                <TextBlock Text="{l:T 'SNR 7.5 · 2 hops  4:12 PM'}" FontSize="10" Opacity="0.7" Foreground="{Binding PreviewIncomingText}" HorizontalAlignment="Right" />
+              </StackPanel>
+            </Border>
+            <Border Background="{Binding PreviewOutgoingBubble}" CornerRadius="14,4,14,14" Padding="10,6" HorizontalAlignment="Right" MaxWidth="210">
+              <StackPanel>
+                <TextBlock Text="{l:T 'Loud and clear, 5 hops from here 👍'}" TextWrapping="Wrap" Foreground="{Binding PreviewOutgoingText}" FontSize="13" />
+                <TextBlock Text="{l:T '4:13 PM ✓✓'}" FontSize="10" Opacity="0.7" Foreground="{Binding PreviewOutgoingText}" HorizontalAlignment="Right" />
+              </StackPanel>
+            </Border>
+            <Border Background="{Binding PreviewIncomingBubble}" CornerRadius="4,14,14,14" Padding="10,6" HorizontalAlignment="Left" MaxWidth="210">
+              <TextBlock Text="{l:T 'Great, thanks!'}" TextWrapping="Wrap" Foreground="{Binding PreviewIncomingText}" FontSize="13" />
+            </Border>
+          </StackPanel>
+        </Panel>
+      </Border>
+    </StackPanel>
+
+    <!-- Actions -->
+    <Border Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="20,10">
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+        <Button Content="{l:T 'Reset to default'}" Command="{Binding ResetToDefaultCommand}" Margin="0,0,8,0" />
+        <Button Grid.Column="1" Content="{l:T 'Use for all chats'}" Command="{Binding UseForAllChatsCommand}" IsVisible="{Binding IsPerChat}"
+                ToolTip.Tip="{l:T 'Make this the default look for every chat that doesn\'t have its own'}" />
+        <Button Grid.Column="3" Content="{l:T 'Cancel'}" Command="{Binding CancelCommand}" Margin="0,0,8,0" />
+        <Button Grid.Column="4" Classes="accent" Content="{l:T 'Save'}" Command="{Binding SaveCommand}" />
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

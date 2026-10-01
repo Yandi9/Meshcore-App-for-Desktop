@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.RxLogView"
+             x:DataType="vm:RxLogViewModel">
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <Grid ColumnDefinitions="*,Auto" Margin="24,18,24,4">
+      <StackPanel>
+        <TextBlock Classes="pagetitle" Text="{l:T 'RX Log'}" />
+        <TextBlock Classes="hint" Text="{l:T 'Every packet your radio receives, decoded and decrypted where possible.'}" />
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+        <ToggleSwitch OnContent="{l:T 'Logging'}" OffContent="{l:T 'Logging off'}" IsChecked="{Binding LoggingEnabled}" />
+        <ToggleButton IsChecked="{Binding Paused}" ToolTip.Tip="{l:T 'Pause live updates'}">
+          <StackPanel Orientation="Horizontal" Spacing="4">
+            <PathIcon Classes="small" Data="{StaticResource Icon.Pause}" />
+            <TextBlock Text="{l:T 'Pause'}" />
+          </StackPanel>
+        </ToggleButton>
+        <Button Content="{l:T 'Export CSV…'}" Command="{Binding ExportCommand}" />
+        <Button Classes="danger" Content="{l:T 'Clear'}" Command="{Binding ClearCommand}" />
+      </StackPanel>
+    </Grid>
+    <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" Margin="24,6,24,8">
+      <ComboBox ItemsSource="{Binding Filters}" SelectedItem="{Binding Filter}" MinWidth="130">
+        <ComboBox.ItemTemplate>
+          <DataTemplate><TextBlock Text="{Binding Converter={x:Static conv:EnumDisplayConverter.Instance}}" /></DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+      <TextBox Grid.Column="1" Margin="8,0" Watermark="{l:T 'Filter text, sender, channel or hash'}" Text="{Binding Search}" />
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <TextBlock Classes="caption" Text="{Binding CountText}" />
+        <TextBlock Classes="caption" Foreground="{DynamicResource App.Warning}" Text="{Binding PendingCount, StringFormat={l:T '+{0} new'}}"
+                   IsVisible="{Binding PendingCount, Converter={x:Static conv:PositiveConverter.Instance}}" />
+      </StackPanel>
+    </Grid>
+    <Grid Grid.Row="2" ColumnDefinitions="*,320" Margin="24,0,24,0">
+      <Border Classes="card" Padding="0">
+        <DockPanel>
+          <Grid DockPanel.Dock="Top" ColumnDefinitions="88,96,100,58,46,46,*" Margin="12,8,12,6">
+            <TextBlock Classes="caption" Text="{l:T 'Time'}" />
+            <TextBlock Grid.Column="1" Classes="caption" Text="{l:T 'Type'}" />
+            <TextBlock Grid.Column="2" Classes="caption" Text="{l:T 'Route'}" />
+            <TextBlock Grid.Column="3" Classes="caption" Text="{l:T 'Hops'}" />
+            <TextBlock Grid.Column="4" Classes="caption" Text="SNR" />
+            <TextBlock Grid.Column="5" Classes="caption" Text="RSSI" />
+            <TextBlock Grid.Column="6" Classes="caption" Text="{l:T 'Content'}" />
+          </Grid>
+          <ListBox ItemsSource="{Binding Rows}" SelectedItem="{Binding Selected}" Background="Transparent">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem"><Setter Property="Padding" Value="12,4" /><Setter Property="MinHeight" Value="26" /></Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:RxLogRow">
+                <Grid ColumnDefinitions="88,96,100,58,46,46,*">
+                  <TextBlock Text="{Binding Time}" Classes="mono" FontSize="12" />
+                  <TextBlock Grid.Column="1" Text="{Binding Type}" FontSize="12" FontWeight="SemiBold" Foreground="{Binding TypeColor, Converter={x:Static conv:HexBrushConverter.Instance}}" />
+                  <TextBlock Grid.Column="2" Text="{Binding Route}" FontSize="12" />
+                  <TextBlock Grid.Column="3" Text="{Binding Hops}" FontSize="12" />
+                  <TextBlock Grid.Column="4" Text="{Binding Snr}" FontSize="12" />
+                  <TextBlock Grid.Column="5" Text="{Binding Rssi}" FontSize="12" />
+                  <TextBlock Grid.Column="6" Text="{Binding Summary}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+      <Border Grid.Column="1" Classes="card" Margin="12,0,0,0" Padding="12">
+        <DockPanel>
+          <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+            <TextBlock Classes="h3" Text="{l:T 'Packet details'}" />
+            <Button Grid.Column="1" Classes="link" Content="{l:T 'Copy'}" Command="{Binding CopyDetailCommand}" />
+          </Grid>
+          <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <SelectableTextBlock Text="{Binding DetailText}" Classes="mono" FontSize="11.5" />
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+    </Grid>
+    <Border Grid.Row="3" Height="16" />
+  </Grid>
+</UserControl>

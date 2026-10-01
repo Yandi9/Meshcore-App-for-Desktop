@@ -1,0 +1,6 @@
+SkiaSharp.NativeAssets.Linux 2.88.9
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (expression): MIT
+Project: https://go.microsoft.com/fwlink/?linkid=868515
+Package: https://www.nuget.org/packages/SkiaSharp.NativeAssets.Linux/2.88.9

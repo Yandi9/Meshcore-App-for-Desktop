@@ -1,0 +1,6 @@
+Microsoft.Toolkit.Uwp.Notifications 7.1.3
+Authors: Microsoft.Toolkit,dotnetfoundation
+Copyright: (c) .NET Foundation and Contributors.  All rights reserved.
+License (expression): MIT
+Project: https://github.com/CommunityToolkit/WindowsCommunityToolkit
+Package: https://www.nuget.org/packages/Microsoft.Toolkit.Uwp.Notifications/7.1.3

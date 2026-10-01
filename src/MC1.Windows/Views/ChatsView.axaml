@@ -1,0 +1,123 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             x:Class="MC1.Windows.Views.ChatsView"
+             x:DataType="vm:ChatsViewModel">
+  <Grid x:Name="Split" ColumnDefinitions="340,*">
+    <!-- Conversation list -->
+    <Border Classes="pane">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto,Auto" Margin="16,14,10,6">
+          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" ToolTip.Tip="{Binding UnreadSummary}">
+            <TextBlock Classes="pagetitle" Text="{l:T 'Chats'}" VerticalAlignment="Center" />
+            <Border Classes="badge" Height="22" CornerRadius="11" Padding="7,0" Background="{DynamicResource App.Danger}" VerticalAlignment="Center"
+                    IsVisible="{Binding TotalUnread, Converter={x:Static conv:PositiveConverter.Instance}}">
+              <TextBlock Text="{Binding TotalUnread}" FontSize="12" />
+            </Border>
+          </StackPanel>
+          <Button Grid.Column="1" Classes="icon" ToolTip.Tip="{l:T 'Mark all as read'}" Command="{Binding MarkAllReadCommand}">
+            <PathIcon Data="{StaticResource Icon.CheckAll}" />
+          </Button>
+          <Button Grid.Column="2" Classes="icon" ToolTip.Tip="{l:T 'New chat or channel (Ctrl+N)'}" Command="{Binding NewChatCommand}">
+            <PathIcon Data="{StaticResource Icon.Plus}" />
+          </Button>
+        </Grid>
+        <TextBox DockPanel.Dock="Top" Margin="14,4,14,6" Watermark="{l:T 'Search'}" Text="{Binding Search}">
+          <TextBox.InnerLeftContent>
+            <PathIcon Classes="small" Data="{StaticResource Icon.Magnify}" Margin="8,0,0,0" Foreground="{DynamicResource App.TextTertiary}" />
+          </TextBox.InnerLeftContent>
+        </TextBox>
+        <ListBox DockPanel.Dock="Top" ItemsSource="{Binding Filters}" SelectedItem="{Binding Filter}" Margin="10,0,10,6"
+                 Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+          <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+              <Setter Property="Padding" Value="10,3" />
+              <Setter Property="Margin" Value="2" />
+              <Setter Property="CornerRadius" Value="12" />
+              <Setter Property="MinHeight" Value="26" />
+              <Setter Property="Background" Value="{DynamicResource App.Chip}" />
+            </Style>
+            <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+              <Setter Property="Background" Value="{DynamicResource App.Accent}" />
+            </Style>
+            <Style Selector="ListBoxItem:selected">
+              <Setter Property="Foreground" Value="White" />
+            </Style>
+          </ListBox.Styles>
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Converter={x:Static conv:EnumDisplayConverter.Instance}}" FontSize="12" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid>
+          <ListBox Classes="plain" ItemsSource="{Binding Conversations}" SelectedItem="{Binding Selected}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ConversationListItem">
+                <Grid ColumnDefinitions="Auto,*,Auto" Background="Transparent">
+                  <Grid.ContextMenu>
+                    <ContextMenu>
+                      <MenuItem Header="{l:T 'Mark as read'}" Command="{Binding $parent[UserControl].((vm:ChatsViewModel)DataContext).MarkReadCommand}" CommandParameter="{Binding}" IsVisible="{Binding HasUnread}" />
+                      <MenuItem Header="{l:T 'Mute notifications'}" Command="{Binding $parent[UserControl].((vm:ChatsViewModel)DataContext).ToggleMuteCommand}" CommandParameter="{Binding}" IsVisible="{Binding !IsMuted}" />
+                      <MenuItem Header="{l:T 'Unmute notifications'}" Command="{Binding $parent[UserControl].((vm:ChatsViewModel)DataContext).ToggleMuteCommand}" CommandParameter="{Binding}" IsVisible="{Binding IsMuted}" />
+                      <MenuItem Header="{l:T 'Background &amp; colours…'}" Command="{Binding $parent[UserControl].((vm:ChatsViewModel)DataContext).CustomizeAppearanceCommand}" CommandParameter="{Binding}" />
+                      <Separator />
+                      <MenuItem Header="{l:T 'Clear history…'}" Command="{Binding $parent[UserControl].((vm:ChatsViewModel)DataContext).ClearConversationCommand}" CommandParameter="{Binding}" />
+                    </ContextMenu>
+                  </Grid.ContextMenu>
+                  <ctl:Avatar Size="40" Emoji="{Binding Emoji}" IconKey="{Binding AvatarIcon}" Text="{Binding AvatarText}" Color="{Binding AvatarColor}" />
+                  <StackPanel Grid.Column="1" Margin="10,0,6,0" VerticalAlignment="Center" Spacing="1">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                      <TextBlock Text="{Binding Title}" Classes="chattitle" TextTrimming="CharacterEllipsis" MaxWidth="190" Classes.unread="{Binding HasUnreadActive}" />
+                      <PathIcon Classes="tiny" Data="{StaticResource Icon.Star}" Foreground="{DynamicResource App.Warning}" IsVisible="{Binding IsFavorite}" />
+                      <PathIcon Classes="tiny" Data="{StaticResource Icon.BellOffOutline}" Foreground="{DynamicResource App.TextTertiary}" IsVisible="{Binding IsMuted}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding Preview}" Classes="caption" TextTrimming="CharacterEllipsis" MaxLines="1" Classes.unreadpreview="{Binding HasUnreadActive}" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="4">
+                    <TextBlock Text="{Binding TimeText}" Classes="tertiary" HorizontalAlignment="Right" Classes.unreadtime="{Binding HasUnreadActive}" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="3">
+                      <Border Classes="badge" Background="{DynamicResource App.Warning}" IsVisible="{Binding HasMentions}">
+                        <TextBlock Text="@" />
+                      </Border>
+                      <Border Classes="badge" IsVisible="{Binding HasUnreadActive}" ToolTip.Tip="{l:T 'Unread messages'}">
+                        <TextBlock Text="{Binding UnreadText}" />
+                      </Border>
+                      <Border Classes="badge" Background="{DynamicResource App.TextTertiary}" IsVisible="{Binding HasUnreadMuted}" ToolTip.Tip="{l:T 'Unread (muted)'}">
+                        <TextBlock Text="{Binding UnreadText}" />
+                      </Border>
+                    </StackPanel>
+                  </StackPanel>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <StackPanel IsVisible="{Binding IsEmpty}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8" Margin="24">
+            <PathIcon Classes="large" Data="{StaticResource Icon.ChatOutline}" Foreground="{DynamicResource App.TextTertiary}" HorizontalAlignment="Center" />
+            <TextBlock Text="{l:T 'No conversations yet'}" HorizontalAlignment="Center" FontWeight="SemiBold" />
+            <TextBlock Classes="hint" TextAlignment="Center" Text="{l:T 'Connect your radio, then start a chat with a contact or join a channel.'}" />
+            <Button Classes="accent" HorizontalAlignment="Center" Content="{l:T 'New chat'}" Command="{Binding NewChatCommand}" Margin="0,6,0,0" />
+          </StackPanel>
+        </Grid>
+      </DockPanel>
+    </Border>
+
+    <!-- Active conversation -->
+    <Panel Grid.Column="1">
+      <ContentControl Content="{Binding Active}" />
+      <StackPanel IsVisible="{Binding Active, Converter={x:Static ObjectConverters.IsNull}}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+        <Image Source="/Assets/AppIcon256.png" Width="96" Height="96" Opacity="0.85" />
+        <TextBlock Text="MeshCore" Classes="h2" HorizontalAlignment="Center" />
+        <TextBlock Classes="secondary" Text="{l:T 'Select a conversation to start messaging.'}" HorizontalAlignment="Center" />
+      </StackPanel>
+    </Panel>
+  </Grid>
+</UserControl>

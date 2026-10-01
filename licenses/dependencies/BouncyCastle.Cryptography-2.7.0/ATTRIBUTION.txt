@@ -1,0 +1,6 @@
+BouncyCastle.Cryptography 2.7.0
+Authors: Legion of the Bouncy Castle Inc.
+Copyright: Copyright © Legion of the Bouncy Castle Inc. 2000-2026
+License (expression): MIT
+Project: https://www.bouncycastle.org/stable/nuget/csharp/website
+Package: https://www.nuget.org/packages/BouncyCastle.Cryptography/2.7.0

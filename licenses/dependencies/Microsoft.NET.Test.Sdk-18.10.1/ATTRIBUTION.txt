@@ -1,0 +1,6 @@
+Microsoft.NET.Test.Sdk 18.10.1
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (expression): MIT
+Project: https://github.com/microsoft/vstest
+Package: https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/18.10.1

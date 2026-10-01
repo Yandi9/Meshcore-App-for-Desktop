@@ -1,0 +1,6 @@
+xunit.abstractions 2.0.3
+Authors: James Newkirk,Brad Wilson
+Copyright: 
+License (url): https://raw.githubusercontent.com/xunit/xunit/master/license.txt
+Project: https://github.com/xunit/xunit
+Package: https://www.nuget.org/packages/xunit.abstractions/2.0.3

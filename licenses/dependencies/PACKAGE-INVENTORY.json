@@ -1,0 +1,914 @@
+[
+  {
+    "package": "Avalonia",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Angle.Windows.Natives",
+    "version": "2.1.25547.20250602",
+    "license_type": "file",
+    "license": "LICENSE",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2025 \u00a9 The AvaloniaUI Project",
+    "notices": [
+      "licenses/dependencies/Avalonia.Angle.Windows.Natives-2.1.25547.20250602/LICENSE"
+    ]
+  },
+  {
+    "package": "Avalonia.BuildServices",
+    "version": "11.3.2",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2023-2025 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Controls.ColorPicker",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Desktop",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Fonts.Inter",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.FreeDesktop",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Headless",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Native",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Remote.Protocol",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Skia",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Themes.Fluent",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.Win32",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "Avalonia.X11",
+    "version": "11.3.22",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Avalonia Team",
+    "copyright": "Copyright 2013-2026 \u00a9 The AvaloniaUI Project",
+    "notices": []
+  },
+  {
+    "package": "BouncyCastle.Cryptography",
+    "version": "2.7.0",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Legion of the Bouncy Castle Inc.",
+    "copyright": "Copyright \u00a9 Legion of the Bouncy Castle Inc. 2000-2026",
+    "notices": [
+      "licenses/dependencies/BouncyCastle.Cryptography-2.7.0/LICENSE.md"
+    ]
+  },
+  {
+    "package": "CommunityToolkit.Mvvm",
+    "version": "8.4.2",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "(c) .NET Foundation and Contributors. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/CommunityToolkit.Mvvm-8.4.2/License.md",
+      "licenses/dependencies/CommunityToolkit.Mvvm-8.4.2/ThirdPartyNotices.txt"
+    ]
+  },
+  {
+    "package": "Dapper",
+    "version": "2.1.89",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "Sam Saffron,Marc Gravell,Nick Craver",
+    "copyright": "2019 Stack Exchange, Inc.",
+    "notices": []
+  },
+  {
+    "package": "HarfBuzzSharp",
+    "version": "8.3.1.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/HarfBuzzSharp-8.3.1.1/LICENSE.txt"
+    ]
+  },
+  {
+    "package": "HarfBuzzSharp.NativeAssets.Linux",
+    "version": "8.3.1.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/HarfBuzzSharp.NativeAssets.Linux-8.3.1.1/LICENSE.txt",
+      "licenses/dependencies/HarfBuzzSharp.NativeAssets.Linux-8.3.1.1/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "HarfBuzzSharp.NativeAssets.macOS",
+    "version": "8.3.1.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/HarfBuzzSharp.NativeAssets.macOS-8.3.1.1/LICENSE.txt",
+      "licenses/dependencies/HarfBuzzSharp.NativeAssets.macOS-8.3.1.1/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "HarfBuzzSharp.NativeAssets.WebAssembly",
+    "version": "8.3.1.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/HarfBuzzSharp.NativeAssets.WebAssembly-8.3.1.1/LICENSE.txt",
+      "licenses/dependencies/HarfBuzzSharp.NativeAssets.WebAssembly-8.3.1.1/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "HarfBuzzSharp.NativeAssets.Win32",
+    "version": "8.3.1.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/HarfBuzzSharp.NativeAssets.Win32-8.3.1.1/LICENSE.txt",
+      "licenses/dependencies/HarfBuzzSharp.NativeAssets.Win32-8.3.1.1/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "MicroCom.Runtime",
+    "version": "0.11.0",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "MicroCom.Runtime",
+    "copyright": "Copyright 2021 \u00a9 Nikita Tsukanov",
+    "notices": []
+  },
+  {
+    "package": "Microsoft.AspNetCore.App.Runtime.win-arm64",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.AspNetCore.App.Runtime.win-arm64-10.0.12/LICENSE.txt",
+      "licenses/dependencies/Microsoft.AspNetCore.App.Runtime.win-arm64-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.AspNetCore.App.Runtime.win-x64",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.AspNetCore.App.Runtime.win-x64-10.0.12/LICENSE.txt",
+      "licenses/dependencies/Microsoft.AspNetCore.App.Runtime.win-x64-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.CodeCoverage",
+    "version": "18.10.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.CodeCoverage-18.10.1/ThirdPartyNotices.txt",
+      "licenses/dependencies/Microsoft.CodeCoverage-18.10.1/build/netstandard2.0/ThirdPartyNotices.txt"
+    ]
+  },
+  {
+    "package": "Microsoft.Data.Sqlite",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": []
+  },
+  {
+    "package": "Microsoft.Data.Sqlite.Core",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": []
+  },
+  {
+    "package": "Microsoft.NET.ILLink.Tasks",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.NET.ILLink.Tasks-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.NET.Test.Sdk",
+    "version": "18.10.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": []
+  },
+  {
+    "package": "Microsoft.NETCore.App.Crossgen2.win-x64",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.NETCore.App.Crossgen2.win-x64-10.0.12/LICENSE.TXT",
+      "licenses/dependencies/Microsoft.NETCore.App.Crossgen2.win-x64-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.NETCore.App.Host.win-arm64",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.NETCore.App.Host.win-arm64-10.0.12/LICENSE.TXT",
+      "licenses/dependencies/Microsoft.NETCore.App.Host.win-arm64-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.NETCore.App.Runtime.win-arm64",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.NETCore.App.Runtime.win-arm64-10.0.12/LICENSE.TXT",
+      "licenses/dependencies/Microsoft.NETCore.App.Runtime.win-arm64-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.NETCore.App.Runtime.win-x64",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.NETCore.App.Runtime.win-x64-10.0.12/LICENSE.TXT",
+      "licenses/dependencies/Microsoft.NETCore.App.Runtime.win-x64-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.TestPlatform.ObjectModel",
+    "version": "18.10.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": []
+  },
+  {
+    "package": "Microsoft.TestPlatform.TestHost",
+    "version": "18.10.1",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.TestPlatform.TestHost-18.10.1/ThirdPartyNotices.txt"
+    ]
+  },
+  {
+    "package": "Microsoft.Toolkit.Uwp.Notifications",
+    "version": "7.1.3",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft.Toolkit,dotnetfoundation",
+    "copyright": "(c) .NET Foundation and Contributors.  All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.Toolkit.Uwp.Notifications-7.1.3/License.md"
+    ]
+  },
+  {
+    "package": "Microsoft.Web.WebView2",
+    "version": "1.0.4258.31",
+    "license_type": "file",
+    "license": "LICENSE.txt",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.Web.WebView2-1.0.4258.31/LICENSE.txt",
+      "licenses/dependencies/Microsoft.Web.WebView2-1.0.4258.31/NOTICE.txt"
+    ]
+  },
+  {
+    "package": "Microsoft.Win32.SystemEvents",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.Win32.SystemEvents-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.Win32.SystemEvents",
+    "version": "6.0.0",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.Win32.SystemEvents-6.0.0/LICENSE.TXT",
+      "licenses/dependencies/Microsoft.Win32.SystemEvents-6.0.0/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Microsoft.Windows.SDK.BuildTools",
+    "version": "10.0.26100.4654",
+    "license_type": "url",
+    "license": "https://aka.ms/WinSDKLicenseURL",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": []
+  },
+  {
+    "package": "Microsoft.Windows.SDK.BuildTools.MSIX",
+    "version": "1.7.251221100",
+    "license_type": "file",
+    "license": "sdk_license.txt",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.Windows.SDK.BuildTools.MSIX-1.7.251221100/NOTICE.txt",
+      "licenses/dependencies/Microsoft.Windows.SDK.BuildTools.MSIX-1.7.251221100/sdk_license.txt"
+    ]
+  },
+  {
+    "package": "Microsoft.Windows.SDK.NET.Ref",
+    "version": "10.0.19041.57",
+    "license_type": "url",
+    "license": "https://aka.ms/WinSDKLicenseURL",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": []
+  },
+  {
+    "package": "Microsoft.WindowsAppSDK.Base",
+    "version": "2.0.3",
+    "license_type": "file",
+    "license": "license.txt",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.WindowsAppSDK.Base-2.0.3/license.txt",
+      "licenses/dependencies/Microsoft.WindowsAppSDK.Base-2.0.3/NOTICE.txt"
+    ]
+  },
+  {
+    "package": "Microsoft.WindowsAppSDK.Widgets",
+    "version": "2.0.5",
+    "license_type": "file",
+    "license": "license.txt",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.WindowsAppSDK.Widgets-2.0.5/license.txt"
+    ]
+  },
+  {
+    "package": "Microsoft.WindowsDesktop.App.Runtime.win-arm64",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.WindowsDesktop.App.Runtime.win-arm64-10.0.12/LICENSE"
+    ]
+  },
+  {
+    "package": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/Microsoft.WindowsDesktop.App.Runtime.win-x64-10.0.12/LICENSE"
+    ]
+  },
+  {
+    "package": "QRCoder",
+    "version": "1.8.0",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Raffael Herrmann, Shane Krueger",
+    "copyright": "Copyright \u00a9 2013-2025 Raffael Herrmann. Copyright \u00a9 2024-2025 Shane Krueger. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/QRCoder-1.8.0/LICENSE.txt"
+    ]
+  },
+  {
+    "package": "runtime.android-arm.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.android-arm.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.android-arm64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.android-arm64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.android-x64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.android-x64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.android-x86.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.android-x86.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.linux-arm.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.linux-arm.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.linux-arm64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.linux-arm64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.linux-bionic-arm64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.linux-bionic-arm64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.linux-bionic-x64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.linux-bionic-x64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.linux-musl-arm.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.linux-musl-arm.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.linux-musl-arm64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.linux-musl-arm64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.linux-musl-x64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.linux-musl-x64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.linux-x64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.linux-x64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.maccatalyst-arm64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.maccatalyst-arm64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.maccatalyst-x64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.maccatalyst-x64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.osx-arm64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.osx-arm64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "runtime.osx-x64.runtime.native.System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/runtime.osx-x64.runtime.native.System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "SkiaSharp",
+    "version": "2.88.9",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/SkiaSharp-2.88.9/LICENSE.txt",
+      "licenses/dependencies/SkiaSharp-2.88.9/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "SkiaSharp.NativeAssets.Linux",
+    "version": "2.88.9",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/SkiaSharp.NativeAssets.Linux-2.88.9/LICENSE.txt",
+      "licenses/dependencies/SkiaSharp.NativeAssets.Linux-2.88.9/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "SkiaSharp.NativeAssets.macOS",
+    "version": "2.88.9",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/SkiaSharp.NativeAssets.macOS-2.88.9/LICENSE.txt",
+      "licenses/dependencies/SkiaSharp.NativeAssets.macOS-2.88.9/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "SkiaSharp.NativeAssets.WebAssembly",
+    "version": "2.88.9",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/SkiaSharp.NativeAssets.WebAssembly-2.88.9/LICENSE.txt",
+      "licenses/dependencies/SkiaSharp.NativeAssets.WebAssembly-2.88.9/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "SkiaSharp.NativeAssets.Win32",
+    "version": "2.88.9",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/SkiaSharp.NativeAssets.Win32-2.88.9/LICENSE.txt",
+      "licenses/dependencies/SkiaSharp.NativeAssets.Win32-2.88.9/THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  {
+    "package": "SQLitePCLRaw.bundle_e_sqlite3",
+    "version": "2.1.12",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "Eric Sink",
+    "copyright": "Copyright 2014-2024 SourceGear, LLC",
+    "notices": []
+  },
+  {
+    "package": "SQLitePCLRaw.core",
+    "version": "2.1.12",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "Eric Sink",
+    "copyright": "Copyright 2014-2024 SourceGear, LLC",
+    "notices": []
+  },
+  {
+    "package": "SQLitePCLRaw.lib.e_sqlite3",
+    "version": "2.1.12",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "Eric Sink",
+    "copyright": "Copyright 2014-2024 SourceGear, LLC",
+    "notices": []
+  },
+  {
+    "package": "SQLitePCLRaw.provider.e_sqlite3",
+    "version": "2.1.12",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "Eric Sink",
+    "copyright": "Copyright 2014-2024 SourceGear, LLC",
+    "notices": []
+  },
+  {
+    "package": "System.Drawing.Common",
+    "version": "4.7.0",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/System.Drawing.Common-4.7.0/LICENSE.TXT",
+      "licenses/dependencies/System.Drawing.Common-4.7.0/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "System.Drawing.Common",
+    "version": "6.0.0",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/System.Drawing.Common-6.0.0/LICENSE.TXT",
+      "licenses/dependencies/System.Drawing.Common-6.0.0/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "System.IO.Ports",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/System.IO.Ports-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "System.Security.Cryptography.ProtectedData",
+    "version": "10.0.12",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Microsoft",
+    "copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+    "notices": [
+      "licenses/dependencies/System.Security.Cryptography.ProtectedData-10.0.12/THIRD-PARTY-NOTICES.TXT"
+    ]
+  },
+  {
+    "package": "Tmds.DBus.Protocol",
+    "version": "0.21.3",
+    "license_type": "expression",
+    "license": "MIT",
+    "authors": "Tom Deseyn",
+    "copyright": "Tom Deseyn",
+    "notices": []
+  },
+  {
+    "package": "xunit",
+    "version": "2.9.3",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "jnewkirk,bradwilson",
+    "copyright": "Copyright (C) .NET Foundation",
+    "notices": []
+  },
+  {
+    "package": "xunit.abstractions",
+    "version": "2.0.3",
+    "license_type": "url",
+    "license": "https://raw.githubusercontent.com/xunit/xunit/master/license.txt",
+    "authors": "James Newkirk,Brad Wilson",
+    "copyright": "",
+    "notices": []
+  },
+  {
+    "package": "xunit.analyzers",
+    "version": "1.18.0",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "jnewkirk,bradwilson,marcind",
+    "copyright": "Copyright (C) .NET Foundation",
+    "notices": []
+  },
+  {
+    "package": "xunit.assert",
+    "version": "2.9.3",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "jnewkirk,bradwilson",
+    "copyright": "Copyright (C) .NET Foundation",
+    "notices": []
+  },
+  {
+    "package": "xunit.core",
+    "version": "2.9.3",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "jnewkirk,bradwilson",
+    "copyright": "Copyright (C) .NET Foundation",
+    "notices": []
+  },
+  {
+    "package": "xunit.extensibility.core",
+    "version": "2.9.3",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "jnewkirk,bradwilson",
+    "copyright": "Copyright (C) .NET Foundation",
+    "notices": []
+  },
+  {
+    "package": "xunit.extensibility.execution",
+    "version": "2.9.3",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "jnewkirk,bradwilson",
+    "copyright": "Copyright (C) .NET Foundation",
+    "notices": []
+  },
+  {
+    "package": "xunit.runner.visualstudio",
+    "version": "3.1.5",
+    "license_type": "expression",
+    "license": "Apache-2.0",
+    "authors": "jnewkirk,bradwilson",
+    "copyright": "Copyright (C) .NET Foundation",
+    "notices": []
+  }
+]

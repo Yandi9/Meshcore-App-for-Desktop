@@ -1,0 +1,334 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:u="using:MC1.Core.Utilities"
+             xmlns:conv="using:MC1.Windows.Converters"
+             x:Class="MC1.Windows.Views.RadioView"
+             x:DataType="vm:RadioViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="28,20" MaxWidth="860" HorizontalAlignment="Stretch" Spacing="4">
+      <!-- Device header -->
+      <Border Classes="card">
+        <Grid ColumnDefinitions="Auto,*,Auto">
+          <Border Width="56" Height="56" CornerRadius="12" Background="{DynamicResource App.Accent}">
+            <PathIcon Width="28" Height="28" Data="{StaticResource Icon.RadioTower}" Foreground="White" />
+          </Border>
+          <StackPanel Grid.Column="1" Margin="14,0" VerticalAlignment="Center" Spacing="1">
+            <TextBlock Text="{Binding DeviceName}" Classes="h2" />
+            <TextBlock Text="{Binding Model}" Classes="secondary" />
+            <TextBlock Text="{Binding Firmware}" Classes="caption" />
+            <TextBlock Text="{Binding CurrentPresetName, StringFormat={l:T 'Preset: {0}'}}" Classes="caption" FontWeight="SemiBold"
+                       IsVisible="{Binding CurrentPresetName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <TextBlock Text="{Binding ConnectionText}" Classes="caption" />
+          </StackPanel>
+          <StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="4">
+            <TextBlock Text="{Binding BatteryText}" HorizontalAlignment="Right" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding StorageText}" Classes="caption" HorizontalAlignment="Right" />
+            <TextBlock Text="{Binding Capacity}" Classes="caption" HorizontalAlignment="Right" />
+            <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+              <Button Content="{l:T 'Connect…'}" Command="{Binding OpenConnectCommand}" IsVisible="{Binding !IsConnected}" Classes="accent" />
+              <Button Content="{l:T 'Re-sync'}" Command="{Binding ResyncCommand}" IsVisible="{Binding IsConnected}" />
+            </StackPanel>
+          </StackPanel>
+        </Grid>
+      </Border>
+      <Border Classes="banner" Margin="0,8,0,0" IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <ProgressBar IsIndeterminate="True" Width="40" IsVisible="{Binding Busy}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <StackPanel IsEnabled="{Binding IsConnected}" Spacing="4">
+        <!-- Identity -->
+        <TextBlock Classes="section" Text="{l:T 'IDENTITY &amp; POSITION'}" />
+        <Border Classes="group">
+          <StackPanel>
+            <Grid ColumnDefinitions="200,*,Auto" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Node name'}" />
+              <TextBox Grid.Column="1" Text="{Binding EditName}" MaxLength="31" VerticalAlignment="Center" />
+              <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyNameCommand}" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="200,*,*,Auto" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Position (lat, lon)'}" />
+              <TextBox Grid.Column="1" Text="{Binding EditLat}" Watermark="{l:T 'Latitude'}" Margin="0,0,4,0" VerticalAlignment="Center" />
+              <TextBox Grid.Column="2" Text="{Binding EditLon}" Watermark="{l:T 'Longitude'}" Margin="4,0,0,0" VerticalAlignment="Center" />
+              <Button Grid.Column="3" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyLocationCommand}" VerticalAlignment="Center" />
+            </Grid>
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="200,0,0,8">
+              <Button Content="{l:T 'Use this PC\'s location'}" Command="{Binding UsePcLocationCommand}" />
+              <Button Content="{l:T 'Clear position'}" Command="{Binding ClearLocationCommand}" />
+            </StackPanel>
+            <Grid ColumnDefinitions="*,Auto" Classes="setting">
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{l:T 'Share position in adverts'}" />
+                <TextBlock Classes="hint" Text="{l:T 'Other nodes will see your radio on their map.'}" />
+              </StackPanel>
+              <ToggleSwitch Grid.Column="1" IsChecked="{Binding ShareLocationInAdverts}" OnContent="" OffContent="" />
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Announce this radio now'}" />
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <Button Content="{l:T 'Zero-hop advert'}" Command="{Binding AdvertCommand}" CommandParameter="zero" />
+                <Button Content="{l:T 'Flood advert'}" Command="{Binding AdvertCommand}" CommandParameter="flood" />
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Radio -->
+        <TextBlock Classes="section" Text="{l:T 'RADIO'}" />
+        <Border Classes="group">
+          <StackPanel>
+            <Grid ColumnDefinitions="200,*" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Preset'}" />
+              <ComboBox Grid.Column="1" ItemsSource="{Binding Presets}" SelectedItem="{Binding SelectedPreset}" HorizontalAlignment="Stretch" PlaceholderText="{l:T 'Custom'}" VerticalAlignment="Center">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="u:RadioPreset">
+                    <StackPanel>
+                      <TextBlock Text="{Binding Name}" />
+                      <TextBlock Text="{Binding Summary}" Classes="caption" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </Grid>
+            <TextBlock Text="{Binding MatchingPresetText}" Classes="caption" Margin="200,0,0,4" />
+            <Grid ColumnDefinitions="200,*,*,*,*" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Frequency · BW · SF · CR'}" />
+              <TextBox Grid.Column="1" Text="{Binding EditFrequency}" Watermark="MHz" Margin="0,0,4,0" VerticalAlignment="Center" />
+              <ComboBox Grid.Column="2" ItemsSource="{Binding Bandwidths}" SelectedItem="{Binding EditBandwidth}" Margin="4,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+              <ComboBox Grid.Column="3" ItemsSource="{Binding SpreadingFactors}" SelectedItem="{Binding EditSf}" Margin="4,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+              <ComboBox Grid.Column="4" ItemsSource="{Binding CodingRates}" SelectedItem="{Binding EditCr}" Margin="4,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+            </Grid>
+            <Button Content="{l:T 'Apply radio settings…'}" Command="{Binding ApplyRadioCommand}" Margin="200,2,0,8" />
+            <Grid ColumnDefinitions="200,*,60,Auto" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'TX power (dBm)'}" />
+              <Slider Grid.Column="1" Minimum="{Binding MinTxPower}" Maximum="{Binding MaxTxPower}" Value="{Binding TxPower}" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="2" Text="{Binding TxPower}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="SemiBold" />
+              <Button Grid.Column="3" Content="{l:T 'Apply'}" Command="{Binding ApplyTxPowerCommand}" VerticalAlignment="Center" />
+            </Grid>
+            <StackPanel IsVisible="{Binding SupportsRepeat}">
+              <Grid ColumnDefinitions="*,Auto" Classes="setting">
+                <StackPanel VerticalAlignment="Center">
+                  <TextBlock Text="{l:T 'Repeat mode (off-grid)'}" />
+                  <TextBlock Classes="hint" Text="{l:T 'Your companion radio relays packets for others on a dedicated repeat frequency.'}" />
+                </StackPanel>
+                <ToggleSwitch Grid.Column="1" IsChecked="{Binding RepeatEnabled}" OnContent="" OffContent="" />
+              </Grid>
+              <Grid ColumnDefinitions="200,*" Classes="setting">
+                <TextBlock Classes="label" Text="{l:T 'Repeat frequency'}" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding RepeatPresets}" SelectedItem="{Binding SelectedRepeatPreset}" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="u:RadioPreset">
+                      <TextBlock Text="{Binding Summary}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </Grid>
+              <TextBlock Text="{Binding RepeatRanges}" Classes="caption" Margin="200,0,0,6" TextWrapping="Wrap" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- Contacts -->
+        <TextBlock Classes="section" Text="{l:T 'CONTACTS'}" />
+        <Border Classes="group">
+          <StackPanel>
+            <Grid ColumnDefinitions="*,Auto" Classes="setting">
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{l:T 'Automatically add nodes that advertise'}" />
+                <TextBlock Classes="hint" Text="{l:T 'When off, new nodes appear under Contacts → Discover and you add them yourself.'}" />
+              </StackPanel>
+              <ToggleSwitch Grid.Column="1" IsChecked="{Binding AutoAddEnabled}" OnContent="" OffContent="" />
+            </Grid>
+            <WrapPanel Margin="0,0,0,6" IsEnabled="{Binding AutoAddEnabled}">
+              <CheckBox Content="{l:T 'Companions'}" IsChecked="{Binding AutoAddContacts}" Margin="0,0,14,0" />
+              <CheckBox Content="{l:T 'Repeaters'}" IsChecked="{Binding AutoAddRepeaters}" Margin="0,0,14,0" />
+              <CheckBox Content="{l:T 'Rooms'}" IsChecked="{Binding AutoAddRooms}" Margin="0,0,14,0" />
+              <CheckBox Content="{l:T 'Sensors'}" IsChecked="{Binding AutoAddSensors}" Margin="0,0,14,0" />
+              <CheckBox Content="{l:T 'Overwrite oldest when full'}" IsChecked="{Binding OverwriteOldest}" Margin="0,0,14,0" />
+            </WrapPanel>
+            <Grid ColumnDefinitions="200,120,*,Auto" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Max hops (0 = any)'}" />
+              <NumericUpDown Grid.Column="1" Value="{Binding AutoAddMaxHops}" Minimum="0" Maximum="63" Increment="1" FormatString="0" VerticalAlignment="Center" />
+              <Button Grid.Column="3" Content="{l:T 'Save'}" Command="{Binding ApplyAutoAddCommand}" VerticalAlignment="Center" />
+            </Grid>
+            <TextBlock Classes="hint" Margin="0,0,0,8" Text="{l:T 'Tip: press \'Load advanced settings\' below to read the current auto-add filters from the radio.'}" />
+          </StackPanel>
+        </Border>
+
+        <!-- Telemetry -->
+        <TextBlock Classes="section" Text="{l:T 'TELEMETRY SHARING'}" />
+        <Border Classes="group">
+          <StackPanel>
+            <Grid ColumnDefinitions="200,*" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Battery &amp; status'}" />
+              <ComboBox Grid.Column="1" ItemsSource="{Binding TelemetryModes}" SelectedIndex="{Binding TelemetryBase}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="200,*" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Location'}" />
+              <ComboBox Grid.Column="1" ItemsSource="{Binding TelemetryModes}" SelectedIndex="{Binding TelemetryLocation}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="200,*" Classes="setting">
+              <TextBlock Classes="label" Text="{l:T 'Environment sensors'}" />
+              <ComboBox Grid.Column="1" ItemsSource="{Binding TelemetryModes}" SelectedIndex="{Binding TelemetryEnvironment}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto" Classes="setting">
+              <TextBlock Classes="hint" Text="{l:T '\'Trusted contacts only\' uses the per-contact sharing switches on each contact\'s page.'}" VerticalAlignment="Center" />
+              <Button Grid.Column="1" Content="{l:T 'Save'}" Command="{Binding ApplyTelemetryCommand}" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto" Classes="setting">
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{l:T 'Extra ACKs'}" />
+                <TextBlock Classes="hint" Text="{l:T 'Send an additional acknowledgement for direct messages (improves delivery reports on busy meshes).'}" />
+              </StackPanel>
+              <ToggleSwitch Grid.Column="1" IsChecked="{Binding MultiAcks}" OnContent="" OffContent="" />
+            </Grid>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+
+      <!-- Battery (works offline) -->
+      <TextBlock Classes="section" Text="{l:T 'BATTERY'}" />
+      <Border Classes="group">
+        <StackPanel>
+          <Grid ColumnDefinitions="200,*" Classes="setting">
+            <TextBlock Classes="label" Text="{l:T 'Battery type (OCV curve)'}" />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding OcvOptions}" SelectedItem="{Binding SelectedOcv}" HorizontalAlignment="Stretch" PlaceholderText="{l:T 'Custom curve'}" VerticalAlignment="Center">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="u:OcvPresets+Preset">
+                  <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+          <Grid ColumnDefinitions="200,*,Auto" Classes="setting">
+            <TextBlock Classes="label" Text="{l:T 'Custom curve (mV, 100%→0%)'}" />
+            <TextBox Grid.Column="1" Text="{Binding CustomOcv}" Watermark="4190,4050,3990,…,3100" VerticalAlignment="Center" />
+            <Button Grid.Column="2" Content="{l:T 'Use'}" Margin="8,0,0,0" Command="{Binding ApplyCustomOcvCommand}" VerticalAlignment="Center" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Advanced -->
+      <Expander Header="{l:T 'Advanced'}" Margin="0,16,0,0" HorizontalAlignment="Stretch" IsEnabled="{Binding IsConnected}">
+        <StackPanel Spacing="4">
+          <Button Content="{l:T 'Load advanced settings from radio'}" Command="{Binding LoadAdvancedCommand}" HorizontalAlignment="Left" />
+          <Border Classes="group">
+            <StackPanel>
+              <Grid ColumnDefinitions="200,*" Classes="setting" IsVisible="{Binding SupportsPathHashMode}">
+                <TextBlock Classes="label" Text="{l:T 'Path hash size'}" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding HashModes}" SelectedIndex="{Binding PathHashMode}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+              </Grid>
+              <Grid ColumnDefinitions="200,*,*,Auto" Classes="setting">
+                <TextBlock Classes="label" Text="{l:T 'RX delay base · airtime factor'}" />
+                <TextBox Grid.Column="1" Text="{Binding RxDelayBase}" Margin="0,0,4,0" VerticalAlignment="Center" />
+                <TextBox Grid.Column="2" Text="{Binding AirtimeFactor}" Margin="4,0,0,0" VerticalAlignment="Center" />
+                <Button Grid.Column="3" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyTuningCommand}" VerticalAlignment="Center" />
+              </Grid>
+              <Grid ColumnDefinitions="200,*,Auto" Classes="setting">
+                <TextBlock Classes="label" Text="{l:T 'Bluetooth PIN'}" />
+                <TextBox Grid.Column="1" Text="{Binding BlePin}" MaxLength="6" Watermark="{l:T '6 digits (empty = random)'}" VerticalAlignment="Center" />
+                <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyBlePinCommand}" VerticalAlignment="Center" />
+              </Grid>
+              <Grid ColumnDefinitions="200,*,Auto" Classes="setting">
+                <TextBlock Classes="label" Text="{l:T 'Default flood region'}" />
+                <TextBox Grid.Column="1" Text="{Binding DefaultScope}" Watermark="{l:T 'Region name (empty = unscoped)'}" VerticalAlignment="Center" />
+                <Button Grid.Column="2" Content="{l:T 'Apply'}" Margin="8,0,0,0" Command="{Binding ApplyDefaultScopeCommand}" VerticalAlignment="Center" />
+              </Grid>
+              <Grid ColumnDefinitions="200,*,Auto" Classes="setting">
+                <TextBlock Classes="label" Text="{l:T 'Known regions'}" />
+                <TextBox Grid.Column="1" Text="{Binding KnownRegions}" Watermark="{l:T 'Comma separated'}" VerticalAlignment="Center" />
+                <Button Grid.Column="2" Content="{l:T 'Save'}" Margin="8,0,0,0" Command="{Binding SaveKnownRegionsCommand}" VerticalAlignment="Center" />
+              </Grid>
+            </StackPanel>
+          </Border>
+
+          <TextBlock Classes="section" Text="{l:T 'CUSTOM VARIABLES'}" />
+          <Border Classes="group">
+            <StackPanel>
+              <ItemsControl ItemsSource="{Binding CustomVars}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:CustomVarRow">
+                    <Grid ColumnDefinitions="200,*,Auto" MinHeight="32">
+                      <TextBlock Text="{Binding Key}" Classes="mono" VerticalAlignment="Center" />
+                      <TextBlock Grid.Column="1" Text="{Binding Value}" Classes="mono" VerticalAlignment="Center" />
+                      <Button Grid.Column="2" Classes="link" Content="{l:T 'Edit'}" Command="{Binding $parent[UserControl].((vm:RadioViewModel)DataContext).EditVarCommand}" CommandParameter="{Binding}" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <Grid ColumnDefinitions="200,*,Auto" Classes="setting">
+                <TextBox Text="{Binding NewVarKey}" Watermark="{l:T 'key'}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                <TextBox Grid.Column="1" Text="{Binding NewVarValue}" Watermark="{l:T 'value'}" VerticalAlignment="Center" />
+                <Button Grid.Column="2" Content="{l:T 'Set'}" Margin="8,0,0,0" Command="{Binding SetVarCommand}" VerticalAlignment="Center" />
+              </Grid>
+            </StackPanel>
+          </Border>
+
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Classes="section" Text="{l:T 'STATISTICS'}" />
+            <Button Grid.Column="1" Classes="link" Content="{l:T 'Refresh'}" Command="{Binding RefreshStatsCommand}" VerticalAlignment="Bottom" Margin="0,0,0,6" />
+          </Grid>
+          <Border Classes="group">
+            <ItemsControl ItemsSource="{Binding Stats}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:DetailRow">
+                  <Grid ColumnDefinitions="200,*" MinHeight="30">
+                    <TextBlock Text="{Binding Label}" Classes="secondary" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="{Binding Value}" VerticalAlignment="Center" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Border>
+
+          <TextBlock Classes="section" Text="{l:T 'IDENTITY KEYS'}" />
+          <Border Classes="group" Padding="16,10">
+            <StackPanel Spacing="8">
+              <Grid ColumnDefinitions="*,Auto">
+                <SelectableTextBlock Text="{Binding PublicKey}" Classes="mono" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Classes="link" Content="{l:T 'Copy'}" Command="{Binding CopyPublicKeyCommand}" Margin="8,0,0,0" />
+              </Grid>
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="{l:T 'Export private key…'}" Command="{Binding ExportKeyCommand}" />
+                <Button Content="{l:T 'Import private key…'}" Command="{Binding ImportKeyCommand}" />
+              </StackPanel>
+            </StackPanel>
+          </Border>
+
+          <TextBlock Classes="section" Text="{l:T 'MAINTENANCE'}" />
+          <WrapPanel>
+            <Button Content="{l:T 'Sync clock to this PC'}" Command="{Binding SyncClockCommand}" Margin="0,0,8,8" />
+            <Button Content="{l:T 'Reboot radio…'}" Command="{Binding RebootCommand}" Margin="0,0,8,8" />
+            <Button Classes="danger" Content="{l:T 'Factory reset…'}" Command="{Binding FactoryResetCommand}" Margin="0,0,8,8" />
+          </WrapPanel>
+        </StackPanel>
+      </Expander>
+
+      <!-- Known radios -->
+      <TextBlock Classes="section" Text="{l:T 'RADIOS USED ON THIS PC'}" />
+      <Border Classes="group">
+        <ItemsControl ItemsSource="{Binding KnownRadios}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:KnownRadioRow">
+              <Grid ColumnDefinitions="*,Auto" MinHeight="44">
+                <StackPanel VerticalAlignment="Center">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <Border Classes="chip" IsVisible="{Binding IsCurrent}"><TextBlock Text="{l:T 'current'}" FontSize="11" /></Border>
+                  </StackPanel>
+                  <TextBlock Text="{Binding Detail}" Classes="caption" />
+                </StackPanel>
+                <Button Grid.Column="1" Classes="link danger" Content="{l:T 'Forget…'}" VerticalAlignment="Center"
+                        Command="{Binding $parent[UserControl].((vm:RadioViewModel)DataContext).ForgetRadioCommand}" CommandParameter="{Binding}" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

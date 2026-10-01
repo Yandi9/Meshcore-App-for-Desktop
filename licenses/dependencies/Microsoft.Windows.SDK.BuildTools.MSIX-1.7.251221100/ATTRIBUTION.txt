@@ -1,0 +1,6 @@
+Microsoft.Windows.SDK.BuildTools.MSIX 1.7.251221100
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (file): sdk_license.txt
+Project: https://aka.ms/WinSDKProjectURL
+Package: https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools.MSIX/1.7.251221100

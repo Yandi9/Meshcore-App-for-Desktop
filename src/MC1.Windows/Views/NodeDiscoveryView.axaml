@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             x:Class="MC1.Windows.Views.NodeDiscoveryView"
+             x:DataType="vm:NodeDiscoveryViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="24,18" Spacing="10" MaxWidth="820" HorizontalAlignment="Stretch">
+      <TextBlock Classes="pagetitle" Text="{l:T 'Node Discovery'}" />
+      <TextBlock Classes="hint" Text="{l:T 'Broadcasts a discovery request. Repeaters, room servers and sensors within direct radio range reply with how well they heard you.'}" />
+      <Border Classes="group" Padding="14,10">
+        <StackPanel Spacing="8">
+          <WrapPanel>
+            <CheckBox Content="{l:T 'Repeaters'}" IsChecked="{Binding IncludeRepeaters}" Margin="0,0,16,0" />
+            <CheckBox Content="{l:T 'Room servers'}" IsChecked="{Binding IncludeRooms}" Margin="0,0,16,0" />
+            <CheckBox Content="{l:T 'Sensors'}" IsChecked="{Binding IncludeSensors}" Margin="0,0,16,0" />
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="{l:T 'Listen for (s)'}" VerticalAlignment="Center" />
+              <NumericUpDown Value="{Binding ListenSeconds}" Minimum="3" Maximum="60" Increment="1" FormatString="0" Width="110" />
+            </StackPanel>
+          </WrapPanel>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Classes="accent" Command="{Binding ScanCommand}" IsEnabled="{Binding !IsScanning}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <PathIcon Classes="small" Data="{StaticResource Icon.Radar}" Foreground="White" />
+                <TextBlock Text="{l:T 'Discover'}" Foreground="White" />
+              </StackPanel>
+            </Button>
+            <Button Content="{l:T 'Stop'}" Command="{Binding StopCommand}" IsVisible="{Binding IsScanning}" />
+          </StackPanel>
+          <ProgressBar Value="{Binding Progress}" IsVisible="{Binding IsScanning}" Height="4" />
+          <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Classes="secondary" />
+        </StackPanel>
+      </Border>
+      <ItemsControl ItemsSource="{Binding Results}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:DiscoveredNeighbourRow">
+            <Border Classes="card" Padding="12,10" Margin="0,0,0,6">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <ctl:Avatar Size="36" Emoji="{Binding Emoji}" IconKey="{Binding IconKey}" Color="{Binding Color}" />
+                <StackPanel Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding KeyText}" Classes="caption mono" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <TextBlock Text="{Binding Signal}" Classes="caption" />
+                </StackPanel>
+                <Panel Grid.Column="2" VerticalAlignment="Center">
+                  <Button Content="{l:T 'Add contact'}" IsVisible="{Binding !IsKnown}" IsEnabled="{Binding !Added}"
+                          Command="{Binding $parent[UserControl].((vm:NodeDiscoveryViewModel)DataContext).AddCommand}" CommandParameter="{Binding}" />
+                  <TextBlock Classes="caption" Text="{l:T 'In contacts'}" IsVisible="{Binding IsKnown}" />
+                </Panel>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

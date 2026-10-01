@@ -1,0 +1,158 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             xmlns:conv="using:MC1.Windows.Converters"
+             xmlns:ctl="using:MC1.Windows.Controls"
+             x:Class="MC1.Windows.Views.ContactDetailView"
+             x:DataType="vm:ContactDetailViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="28,24" MaxWidth="760" HorizontalAlignment="Stretch" Spacing="4">
+      <!-- Header -->
+      <Grid ColumnDefinitions="Auto,*">
+        <ctl:Avatar Size="64" Emoji="{Binding Emoji}" IconKey="{Binding IconKey}" Color="{Binding Color}" />
+        <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center" Spacing="2">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBlock Text="{Binding Name}" Classes="h1" />
+            <PathIcon Data="{StaticResource Icon.Star}" Foreground="{DynamicResource App.Warning}" IsVisible="{Binding IsFavorite}" VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Text="{Binding TypeText}" Classes="secondary" />
+          <TextBlock Text="{Binding RouteText}" Classes="caption" TextWrapping="Wrap" />
+        </StackPanel>
+      </Grid>
+
+      <!-- Actions -->
+      <WrapPanel Margin="0,16,0,4">
+        <Button Classes="accent" Margin="0,0,8,8" Command="{Binding MessageCommand}" IsVisible="{Binding CanMessage}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.MessageTextOutline}" Foreground="White" />
+            <TextBlock Text="{l:T 'Message'}" Foreground="White" />
+          </StackPanel>
+        </Button>
+        <Button Classes="accent" Margin="0,0,8,8" Command="{Binding ManageCommand}" IsVisible="{Binding CanManage}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.Wrench}" Foreground="White" />
+            <TextBlock Text="{l:T 'Manage'}" Foreground="White" />
+          </StackPanel>
+        </Button>
+        <Button Margin="0,0,8,8" Command="{Binding PingCommand}" IsEnabled="{Binding !Busy}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.Radar}" />
+            <TextBlock Text="{l:T 'Ping'}" />
+          </StackPanel>
+        </Button>
+        <Button Margin="0,0,8,8" Command="{Binding RequestTelemetryCommand}" IsEnabled="{Binding !Busy}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.Thermometer}" />
+            <TextBlock Text="{l:T 'Telemetry'}" />
+          </StackPanel>
+        </Button>
+        <Button Margin="0,0,8,8" Command="{Binding ShareCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.Qrcode}" />
+            <TextBlock Text="{l:T 'Share'}" />
+          </StackPanel>
+        </Button>
+        <Button Margin="0,0,8,8" Command="{Binding ShowOnMapCommand}" IsVisible="{Binding HasLocation}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.MapMarkerOutline}" />
+            <TextBlock Text="{l:T 'Map'}" />
+          </StackPanel>
+        </Button>
+        <Button Margin="0,0,8,8" Command="{Binding ToggleFavoriteCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.StarOutline}" />
+            <TextBlock Text="{l:T 'Favorite'}" IsVisible="{Binding !IsFavorite}" />
+            <TextBlock Text="{l:T 'Unfavorite'}" IsVisible="{Binding IsFavorite}" />
+          </StackPanel>
+        </Button>
+        <Button Margin="0,0,8,8">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <PathIcon Classes="small" Data="{StaticResource Icon.DotsHorizontal}" />
+            <TextBlock Text="{l:T 'More'}" />
+          </StackPanel>
+          <Button.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="{l:T 'Set nickname…'}" Command="{Binding RenameCommand}" />
+              <MenuItem Header="{l:T 'Copy public key'}" Command="{Binding CopyKeyCommand}" />
+              <MenuItem Header="{l:T 'Share advert over the mesh'}" Command="{Binding ShareOverMeshCommand}" />
+              <Separator />
+              <MenuItem Header="{l:T 'Discover path'}" Command="{Binding DiscoverPathCommand}" />
+              <MenuItem Header="{l:T 'Edit out path…'}" Command="{Binding EditPathCommand}" />
+              <MenuItem Header="{l:T 'Reset path (flood)'}" Command="{Binding ResetPathCommand}" />
+              <Separator />
+              <MenuItem Header="{l:T 'Block'}" Command="{Binding ToggleBlockCommand}" IsVisible="{Binding !IsBlocked}" />
+              <MenuItem Header="{l:T 'Unblock'}" Command="{Binding ToggleBlockCommand}" IsVisible="{Binding IsBlocked}" />
+              <MenuItem Header="{l:T 'Remove contact…'}" Command="{Binding RemoveCommand}" />
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+      </WrapPanel>
+
+      <Border Classes="banner" IsVisible="{Binding ActionResult, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <ProgressBar IsIndeterminate="True" Width="40" IsVisible="{Binding Busy}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding ActionResult}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <TextBlock Classes="section" Text="{l:T 'DETAILS'}" />
+      <Border Classes="group">
+        <ItemsControl ItemsSource="{Binding Info}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:DetailRow">
+              <Grid ColumnDefinitions="180,*" Classes="setting" MinHeight="34">
+                <TextBlock Text="{Binding Label}" Classes="label secondary" />
+                <SelectableTextBlock Grid.Column="1" Text="{Binding Value}" VerticalAlignment="Center" TextWrapping="Wrap" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+
+      <StackPanel IsVisible="{Binding HasTelemetry}">
+        <TextBlock Classes="section" Text="{l:T 'TELEMETRY'}" />
+        <Border Classes="group">
+          <ItemsControl ItemsSource="{Binding Telemetry}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:DetailRow">
+                <Grid ColumnDefinitions="220,*" Classes="setting" MinHeight="34">
+                  <TextBlock Text="{Binding Label}" Classes="label secondary" />
+                  <TextBlock Grid.Column="1" Text="{Binding Value}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+      </StackPanel>
+
+      <TextBlock Classes="section" Text="{l:T 'NOTIFICATIONS'}" IsVisible="{Binding CanMessage}" />
+      <Border Classes="group" IsVisible="{Binding CanMessage}">
+        <Grid ColumnDefinitions="*,Auto" Classes="setting">
+          <TextBlock Classes="label" Text="{l:T 'Notify me about messages from this contact'}" />
+          <ComboBox Grid.Column="1" ItemsSource="{Binding Levels}" SelectedItem="{Binding NotificationLevel}" MinWidth="160" VerticalAlignment="Center">
+            <ComboBox.ItemTemplate>
+              <DataTemplate><TextBlock Text="{Binding Converter={x:Static conv:EnumDisplayConverter.Instance}}" /></DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </Grid>
+      </Border>
+
+      <TextBlock Classes="section" Text="{l:T 'SHARE MY TELEMETRY WITH THIS CONTACT'}" />
+      <Border Classes="group">
+        <StackPanel Margin="0,6">
+          <TextBlock Classes="hint" Text="{l:T 'Applies when your radio\'s telemetry mode is \'Trusted contacts only\' (Radio → Telemetry).'}" Margin="0,0,0,6" />
+          <CheckBox Content="{l:T 'Battery and basic status'}" IsChecked="{Binding ShareTelemetryBase}" />
+          <CheckBox Content="{l:T 'Location'}" IsChecked="{Binding ShareTelemetryLocation}" />
+          <CheckBox Content="{l:T 'Environment sensors'}" IsChecked="{Binding ShareTelemetryEnvironment}" />
+          <Button Content="{l:T 'Save'}" HorizontalAlignment="Left" Margin="0,6,0,4" Command="{Binding SaveTelemetryPermissionsCommand}" />
+        </StackPanel>
+      </Border>
+
+      <TextBlock Classes="section" Text="{l:T 'PUBLIC KEY'}" />
+      <Border Classes="group" Padding="16,10">
+        <SelectableTextBlock Text="{Binding PublicKey}" Classes="mono" TextWrapping="Wrap" FontSize="12" />
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,6 @@
+Microsoft.Windows.SDK.NET.Ref 10.0.19041.57
+Authors: Microsoft
+Copyright: © Microsoft Corporation. All rights reserved.
+License (url): https://aka.ms/WinSDKLicenseURL
+Project: https://aka.ms/WinSDKProjectURL
+Package: https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref/10.0.19041.57

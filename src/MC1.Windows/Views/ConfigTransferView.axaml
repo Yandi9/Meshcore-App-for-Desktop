@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MC1.Windows.Localization"
+             xmlns:vm="using:MC1.Windows.ViewModels"
+             x:Class="MC1.Windows.Views.ConfigTransferView"
+             x:DataType="vm:ConfigTransferViewModel">
+  <DockPanel Margin="22,18">
+    <StackPanel DockPanel.Dock="Bottom" Spacing="8">
+      <TextBlock Text="{Binding Progress}" Classes="caption" IsVisible="{Binding Busy}" />
+      <ProgressBar IsIndeterminate="True" Height="4" IsVisible="{Binding Busy}" />
+      <TextBlock Text="{Binding Error}" Classes="error" IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,8,0,0">
+        <Button Content="{l:T 'Cancel'}" Command="{Binding CancelCommand}" />
+        <Button Classes="accent" Content="{l:T 'Restore'}" Command="{Binding GoCommand}" IsEnabled="{Binding !Busy}" />
+      </StackPanel>
+    </StackPanel>
+    <ScrollViewer>
+      <StackPanel Spacing="8">
+        <TextBlock Classes="hint" Text="{Binding Summary}" />
+        <StackPanel Spacing="4" IsVisible="{Binding HasSeveralDevices}">
+          <TextBlock Text="{l:T 'Radio in the backup'}" FontWeight="SemiBold" />
+          <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" HorizontalAlignment="Stretch" />
+        </StackPanel>
+        <StackPanel Spacing="4">
+          <TextBlock Text="{l:T 'Restore into'}" FontWeight="SemiBold" />
+          <ComboBox ItemsSource="{Binding Targets}" SelectedItem="{Binding SelectedTarget}" HorizontalAlignment="Stretch" />
+        </StackPanel>
+
+        <TextBlock Text="{l:T 'Added to this PC now'}" FontWeight="SemiBold" Margin="0,8,0,0" />
+        <CheckBox Content="{Binding MessagesLabel}" IsChecked="{Binding Messages}" IsEnabled="{Binding HasMessages}" />
+        <CheckBox Content="{Binding ContactsLabel}" IsChecked="{Binding Contacts}" IsEnabled="{Binding HasContacts}" />
+        <CheckBox Content="{Binding ChannelsLabel}" IsChecked="{Binding Channels}" IsEnabled="{Binding HasChannels}" />
+        <CheckBox Content="{Binding PathsLabel}" IsChecked="{Binding Paths}" IsEnabled="{Binding HasPaths}" />
+        <CheckBox Content="{l:T 'App settings'}" IsChecked="{Binding AppSettings}" IsEnabled="{Binding HasAppSettings}" />
+
+        <TextBlock Text="{l:T 'Written to the radio when you connect it'}" FontWeight="SemiBold" Margin="0,8,0,0" />
+        <CheckBox Content="{Binding NameLabel}" IsChecked="{Binding Name}" IsEnabled="{Binding HasName}" />
+        <CheckBox Content="{Binding RadioLabel}" IsChecked="{Binding Radio}" IsEnabled="{Binding HasRadio}" />
+        <CheckBox Content="{Binding PositionLabel}" IsChecked="{Binding Position}" IsEnabled="{Binding HasPosition}" />
+        <CheckBox Content="{l:T 'Other settings (auto-add, telemetry, location sharing)'}" IsChecked="{Binding Other}" />
+        <TextBlock Classes="hint" TextWrapping="Wrap"
+                   Text="{l:T 'Restored contacts and channels are also added to the radio then. You\'ll be asked before anything is written.'}" />
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

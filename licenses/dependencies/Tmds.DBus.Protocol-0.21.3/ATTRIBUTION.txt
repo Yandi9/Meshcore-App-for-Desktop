@@ -1,0 +1,6 @@
+Tmds.DBus.Protocol 0.21.3
+Authors: Tom Deseyn
+Copyright: Tom Deseyn
+License (expression): MIT
+Project: 
+Package: https://www.nuget.org/packages/Tmds.DBus.Protocol/0.21.3
