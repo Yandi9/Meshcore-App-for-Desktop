@@ -3,6 +3,7 @@
 Windows desktop adaptation of [MeshCore One](https://github.com/Avi0n/MeshCoreOne), maintained by **YndreW**.
 
 Connect a MeshCore companion radio over Bluetooth LE, USB serial, or WiFi. Includes messaging, channels, contacts, maps, radio tools, backups, a demo radio, and an optional Windows lock screen widget.
+<img width="2860" height="1768" alt="image" src="https://github.com/user-attachments/assets/e7aac54e-5c71-4924-96a5-f42ed16ee8a8" />
 
 ## Download — version 1.0.0
 
