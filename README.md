@@ -1,4 +1,4 @@
-# MeshCore for Windows
+# MeshCore-X
 
 Windows desktop adaptation of [MeshCore One](https://github.com/Avi0n/MeshCoreOne), maintained by **YndreW**.
 
